@@ -116,6 +116,7 @@ m / mm     | Minutes                     | s / ss    | Seconds
 S          | Milliseconds
 
 <a name="armv"></a>
+
 #### AutoRule Magic Variables
 
 If one autorule contains RegExp and works, it will generate magic variables `{result:#.#}`.

@@ -12,11 +12,11 @@ excerpt_separator: <!--more-->
 > **根据文章中的 `<h2>` `<h3>` 之类的标题生成目录的插件。**
 >
 > 目前感觉比较爽的一个例子是 Smart Header 的用户手册，注意左下角…
-> http://note.laobubu.net/archives/chrome-smart-header-manual/
+> <http://note.laobubu.net/archives/chrome-smart-header-manual/>
 
 ## 下载它
 
-从 [GitHub 项目页](https://github.com/laobubu/typecho_ContentIndex) 下载，戳这里： https://github.com/laobubu/typecho_ContentIndex/archive/master.zip
+从 [GitHub 项目页](https://github.com/laobubu/typecho_ContentIndex) 下载，戳这里： <https://github.com/laobubu/typecho_ContentIndex/archive/master.zip>
 
 <!--more-->
 

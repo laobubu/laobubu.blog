@@ -41,7 +41,7 @@ viewport 就是浏览器窗口中内容显示那一块区域（含右边滚动�
 
 如果你的设计就是基于视口宽度为固定值的情况，那么你会发现，适配从未如此轻松……浏览器把内容直接放大（或缩小），使得视口宽度为你设定的值。就像下面多个“移动设备”，虽然屏幕宽度不一样，但是内容都被缩放得刚好塞满了屏幕…
 
-<center>![various device example](http://i671.photobucket.com/albums/vv73/laobubu/pics%20for%20blog/css-device-adapt-fig1.jpg)</center>
+![various device example](http://i671.photobucket.com/albums/vv73/laobubu/pics%20for%20blog/css-device-adapt-fig1.jpg)
 
 
 

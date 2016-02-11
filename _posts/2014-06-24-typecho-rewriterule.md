@@ -17,7 +17,7 @@ excerpt_separator: <!--more-->
 
 ## 下载它
 
-从 GitHub 下载，戳这里： https://github.com/laobubu/Typecho_rewriterule/archive/master.zip
+从 GitHub 下载，戳这里： <https://github.com/laobubu/Typecho_rewriterule/archive/master.zip>
 
 <!--more-->
 

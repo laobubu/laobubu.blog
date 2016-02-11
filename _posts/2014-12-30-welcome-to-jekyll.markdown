@@ -24,8 +24,8 @@ excerpt_separator: <!--more-->
  * 如果要关闭评论，在文章头部加上 `nocomments: true` 即可
 * ……
 
-如果要快速搭建一个的话，可以 clone 我的模板Repo，具体见： https://github.com/laobubu/jekyll-theme-EasyBook
+如果要快速搭建一个的话，可以 clone 我的模板Repo，具体见： <https://github.com/laobubu/jekyll-theme-EasyBook>
 
-还有就是从 WordPress 导入数据，我用的是自己编写的一个 NodeJS 程序，可以在这里拿到代码： https://gist.github.com/laobubu/d48aeb6d35913ccf1fce
+还有就是从 WordPress 导入数据，我用的是自己编写的一个 NodeJS 程序，可以在这里拿到代码： <https://gist.github.com/laobubu/d48aeb6d35913ccf1fce>
 
 天色已晚，该睡觉了。晚安。下周还有考试呢。
