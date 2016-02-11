@@ -5,8 +5,10 @@ date: 2010-10-24 8:41:59
 permalink: /429
 categories: ["代码笔记和片段"]
 tags: ["htaccess","正则表达式","程序自动化"]
+excerpt_separator: <!--more-->
 published: true
 ---
+<div class="old_stuff_warning">本文导入自一个特别古老的 WordPress 博客，内容可能会显得太年轻、太简单，不具有太大参考价值！ <a href="/archivers/hello">了解详情&raquo;</a></div>
 <img src="http://www.apache.org/images/feather.gif" alt="" width="174" height="53" align="right" /><br><br>Apache模块 mod_rewrite 提供了一个基于正则表达式分析器的重写引擎来实时重写URL请求。它支持每个完整规则可以拥有不限数量的子规则以及附加条件规则的灵活而且强大的URL操作机制。此URL操作可以依赖于各种测试，比如服务器变量、环境变量、HTTP头、时间标记，甚至各种格式的用于匹配URL组成部分的查找数据库。<br><br>此模块可以操作URL的所有部分(包括路径信息部分)，在服务器级的(httpd.conf)和目录级的(.htaccess)配置都有效，还可以生成最终请求字符串。此重写操作的结果可以是内部子处理，也可以是外部请求的转向，甚至还可以是内部代理处理。<br><br>这里着重介绍一下 RewriteRule的规则以及参数说明。RewriteRule指令是重写引擎的根本。此指令可以多次使用。每个指令定义一个简单的重写规则。这些规则的定义顺序尤为重要——在运行时，规则是按这个顺序逐一生效的。<!--more-->
 <h3>格式</h3>
 <pre style="font-size: 12px;">RewriteRule Pattern Substitution [flags]</pre>

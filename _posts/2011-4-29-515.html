@@ -5,8 +5,10 @@ date: 2011-4-29 16:26:51
 permalink: /515
 categories: ["互联网资源","日志","自己动手教程"]
 tags: []
+excerpt_separator: <!--more-->
 published: true
 ---
+<div class="old_stuff_warning">本文导入自一个特别古老的 WordPress 博客，内容可能会显得太年轻、太简单，不具有太大参考价值！ <a href="/archivers/hello">了解详情&raquo;</a></div>
 <img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/Mobile.png" alt="" align="right" />N周前的一个周末，我终于可以开始使用智能机了。恩，诺基亚C5-00，搭载S60v3FP2系统。不过和大多数刚开始使用智能机的网友一样，我遭遇了有关软件证书的问题。<br><br>sis(x)格式是S60系统的应用程序包的格式，其中包含的就是应用程序。在使用智能机之前我只有用java软件的份，似乎Java软件是通过在jad文档里写那些证书验证数据来解决问题的，一个带签名的Java软件往往都会带着个2-5K不等的jad文档。S60更加恶心，一个软件如果没有签名就不能安装，因此破解之很必要。<br><br><!--more-->
 <h3>开始破解</h3>
 <blockquote>网络上较多的说法就是使用HelloOX一键破解，但是根据我的测试，我悲催地失败了，从1.x到2.x都不能，一直卡在根证书安装，最后等不住了按下取消，打开文件管理器看看，靠，A-Z盘全部盘符排了一屏幕！<br><br>后来还有一个解决方法就是使用CertHack来进行破解，很轻松的说，前提是你已经得到了你的个人证书。（个人证书也是开发者证书，是给搞软件开发的人测试使用的。不过你可以去搜索一下，现在很多论坛都有人在制作证书。我的是 zntx.cc 上面制作的）<br><br>以下就是破解过程

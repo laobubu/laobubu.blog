@@ -5,8 +5,10 @@ date: 2011-1-23 14:51:12
 permalink: /465
 categories: ["代码笔记和片段","更新"]
 tags: ["Google","oAuth","php","youtube","你管索引"]
+excerpt_separator: <!--more-->
 published: true
 ---
+<div class="old_stuff_warning">本文导入自一个特别古老的 WordPress 博客，内容可能会显得太年轻、太简单，不具有太大参考价值！ <a href="/archivers/hello">了解详情&raquo;</a></div>
 今天更新了你管索引的程序，之前那个烂尾——评论功能解决了。发现Google很多服务的API都支持AuthSub完成类似oAuth的若干操作，这里做一个笔记，以后说不准还会用到。<br><br>AuthSub与oAuth相比，简单多了。你只要让用户访问Google的验证页面，完成验证后用户会折回来，同时地址里出现一个?token=临时令牌……以后需要更多操作只需要一步就可以将临时令牌转为永久令牌。在使用临时/永久令牌时候只需要在HTTP请求头添加一行就OK。超简单吧。<br><br>以后可能懒得写代码了，直接copy吧。<br><br><!--more-->
 <h3>获取临时令牌</h3>
 我刚刚说过了，你只需要设置一个超链接到google指定的页面即可。但是这个超链接指向哪里呢？<br><br>&lt;a href="<span style="text-decoration: underline;">https://www.google.com/accounts/AuthSubRequest?h=zh-CN&amp;next=<span style="color: #0000ff;">验证通过后回到的页面</span>&amp;scope=<span style="color: #0000ff;">服务类型</span>&amp;session=1&amp;secure=0</span>"&gt;用Google登陆&lt;/a&gt;<br><br>其中服务类型需要自选一下。以下为常用的条目：

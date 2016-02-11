@@ -5,8 +5,10 @@ date: 2010-6-14 20:10:34
 permalink: /129
 categories: ["代码笔记和片段"]
 tags: ["Flash","html","js"]
+excerpt_separator: <!--more-->
 published: true
 ---
+<div class="old_stuff_warning">本文导入自一个特别古老的 WordPress 博客，内容可能会显得太年轻、太简单，不具有太大参考价值！ <a href="/archivers/hello">了解详情&raquo;</a></div>
 <img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/code.png" border="0" alt="Code" align="right" />今天<a href="https://twitter.com/zilaishui">@zilaishui</a>在twitter上和我<a href="https://twitter.com/zilaishui/status/16132289261">提到了一些关于浏览器内复制功能的若干问题</a>，这里总结并分享一下相关的代码。<br><br>查资料得，IE下我们可以使用很劣的方法来实现文字的复制：
 <blockquote>window.clipboardData.<span style="color: #000080;">setData</span>(<span style="color: #008000;">"Text"</span>, <span style="color: #008000;">"我在复制文字"</span>);</blockquote>
 但是在非IE内核的浏览器里面，这种方法行不通的。不过有意思的是Flash里面也有相关函数

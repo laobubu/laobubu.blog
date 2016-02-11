@@ -5,8 +5,10 @@ date: 2010-10-23 13:18:30
 permalink: /426
 categories: ["代码笔记和片段","程序和代码","网站维护"]
 tags: ["FastTwitter","htaccess","html","域名"]
+excerpt_separator: <!--more-->
 published: true
 ---
+<div class="old_stuff_warning">本文导入自一个特别古老的 WordPress 博客，内容可能会显得太年轻、太简单，不具有太大参考价值！ <a href="/archivers/hello">了解详情&raquo;</a></div>
 <img src="http://www.apache.org/images/feather.gif" alt="" width="174" height="53" align="right" />各种虚拟主机，不论是使用啥控制面板，应该都会有“绑定域名”或者“附加站点”这类功能吧。使用这类功能我们可以让用户以不同的域名访问自己的站点，这很不错，不过问题就是：你怎么指定一个域名对应的文件夹呢？虽然“附加站点”这种功能会给你创建一个对应新域名的文件夹，但是这文件夹一般你改不了，多没有个性啊……<br><br>如果你用的是<a href="http://www.apache.org/">Apache</a>服务器程序（恩，就是那个标志为一根鸡毛的东东），可以使用htaccess来进行重写操作，模仿主机控制面板那种多站点的效果。<br><br>注意不是<a href="http://blog.laobubu.net/11">重定向</a>。<!--more-->
 <h3>1、先绑定你的域名</h3>
 <blockquote>还记得你当时是怎么搞定你的域名的么？<a href="http://blog.laobubu.net/8">本站#8日志有讲过</a>。你只要把那个新域名绑定到你站点上即可（注意是绑到你的主站上，不要为它新建一个站点）。试试访问，哦，正常了，继续。</blockquote>

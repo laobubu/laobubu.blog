@@ -5,8 +5,10 @@ date: 2011-3-26 14:1:30
 permalink: /506
 categories: ["代码笔记和片段"]
 tags: ["ajax","Google","html","js","域名","外交"]
+excerpt_separator: <!--more-->
 published: true
 ---
+<div class="old_stuff_warning">本文导入自一个特别古老的 WordPress 博客，内容可能会显得太年轻、太简单，不具有太大参考价值！ <a href="/archivers/hello">了解详情&raquo;</a></div>
 <img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/code.png" alt="" align="right" />如果你是一个搞网页代码的，想制作一个AJAX动态页面，但是需要使用到外网的数据，这下子你怎么办涅？<br><br>这就是倒霉的AJAX（或者直接就是JS）跨域传输问题。js里面虽然有强大的功能实现同域名下的数据互相访问，但是这里还是有一个杯子，其他域名上的数据不能获得，哪怕你是主域名，对方是你的子域名也不可以。<br><br>如果你没有跨域方面的问题，可以试试<a href="//blog.laobubu.net/212" target="_blank">我的这篇博文</a>里讲的做法。如果遇到了，那么请继续阅读……<br><br><!--more-->
 <h3>json格式的数据跨域传输——很雷人的事情</h3>
 <blockquote>首先先看一下json。json这种简洁的格式可以直接往js、python等语言里面丢，比如这句代码很正确地把变量a变成了一个美丽的数组：
