@@ -7,7 +7,7 @@ permalink: /archives/websocket-server-and-chrome-notification-extension/
 excerpt_separator: <!--more-->
 ---
 
-![](https://raw.githubusercontent.com/laobubu/Chrome-WebSocket-Notification-Extension-Example/master/icon128.png" alt="Chrome-WebSocket-Notification-Extension-Example)
+![](https://raw.githubusercontent.com/laobubu/Chrome-WebSocket-Notification-Extension-Example/master/icon128.png)
 
 虽然有点炒冷饭了，但是看在博客多日没更新和今天早上糟糕的复变函数考试的份上，就拿出来写一写吧。
 
