@@ -1,0 +1,44 @@
+---
+layout: post
+title: "TK域名申请注册教程"
+date: 2010-4-24 0:19:26
+permalink: /8
+categories: ["免费资源"]
+tags: ["域名"]
+published: true
+---
+<img align="left" title="（TK域名的标志）" src="http://www.dot.tk/images.v2/dottk_logo.gif" alt="" width="120" height="70" />tk域名是一个小岛国Tokelau（托克劳群岛）的国家域名。因为申请tk域名是免费的，所以其曾被评为全球十大危险域名之首。这里我讲一下如何申请注册TK域名并设置DNS（它的转发功能已经在中国被屏蔽）。如果你想要看看效果，你可以访问<a href="http://laobubu.tk" target="_blank">laobubu.tk</a>。<!--more-->
+<h3>①申请你的TK账号</h3>
+<p style="padding-left: 30px;">访问<a href="http://www.dot.tk/">http://www.dot.tk/</a>申请一个tk域名账号。（很简单的）</p>
+-
+<h3>②申请你的DNS（如果你有DNS，可跳过这一步）</h3>
+<p style="padding-left: 30px;">大多数使用cPanel和VistaPanel的免费空间提供DNS，例如x10hosting.com提供DNS。</p>
+<p style="padding-left: 30px;">cPanel和VistaPanel的DNS还需要额外设置一下，你必须在第③步完成后进行。（<a href="#ecpanel" target="_self">后面有写怎么设置</a>）</p>
+<p style="padding-left: 30px;">如果你有你的DNS命名空间，可以跳过这一步。以下为两个例子</p><br><br><blockquote style="padding-left: 30px;">x10hosting.com<br><br>Nameserver 1: ns1.x10hosting.com<br><br>Nameserver 2: ns2.x10hosting.com<br><br>twrpowersystem.com <span style="color: #800000;">（←不推荐它的虚拟主机）</span><br><br>Nameserver 1: ns1.twrpowersystem.com<br><br>Nameserver 2: ns2.twrpowersystem.com<br><br>xtreemhost.com  [VistaPanel]<br><br>Nameserver 1: ns1.xtreemhost.com<br><br>Nameserver 2: ns2.xtreemhost.com</blockquote>
+<p style="padding-left: 30px;">如果你没有，可以访问<a href="http://www.DNSPod.net">DNSPod</a>申请一个，并且在里面添加你的域名，然后在“添加记录”里面添加一个类型为A的记录，记录值就是你的网站，“主机记录”只好填写www了。其他不必填写</p>
+<p style="padding-left: 30px;"><strong>注意：在DNSPod内你的地址里不可以有斜杠。例如【laobubu.example.com】可用，但是【example.com/laobubu】不可用。似乎CNAME类型的记录可以用，但是在DNSPod里面需要收费。你可以试试看其他DNS提供点</strong></p>
+<p style="padding-left: 30px;"><strong> </strong>搞定以后，你就可以得到你的Name Server</p><br><br><blockquote>
+<p style="padding-left: 30px;">dnspod.com</p>
+<p style="padding-left: 30px;">Nameserver 1: ns1.dnsp<span style="text-decoration: underline;"><strong>oo</strong></span>d.net</p>
+<p style="padding-left: 30px;">Nameserver 2: ns2.dnsp<strong><span style="text-decoration: underline;">oo</span></strong>d.net</p>
+</blockquote>
+<p style="padding-left: 30px;">-</p><br><br><h3>③配置你的TK域名</h3>
+<p style="padding-left: 30px;">进入<a href="http://my.dot.tk/cgi-bin/login01.taloha">http://my.dot.tk/cgi-bin/login01.taloha</a>并登陆你的TK账户，在左侧“我的域名”&gt;“修改域名”处找到你申请的域名，点击其后面的“修改”按钮。</p>
+<p style="padding-left: 30px;">在修改页面的一个下拉列表里选择“Use my own DNS Services”，然后点击“Configure”按钮。</p>
+<p style="padding-left: 30px;">在Nameserver里面填写你的第一个Name Server。</p>
+<p style="padding-left: 30px;">点击Add another nameserver，再把另一个Name Server也填写掉。</p>
+<p style="padding-left: 30px;">点击“下一步”按钮。</p>
+-
+<h3>④娱乐活动</h3>
+<p style="padding-left: 30px;">如果正常（出现Succesfully updated changes.），到此你的域名就搞定了。</p>
+<p style="padding-left: 30px;">你现在需要的是泡杯白开水喝并等待，过五分钟就可以用了。</p>
+-<br><br><a name="ecpanel"></a>[以下为cPanel和VistaPanel的域名设置方法]<br><br><strong>cPanel和VistaPanel还需要额外设置DNS[cPanel篇]</strong>
+<p style="padding-left: 30px;">是时候设置你的cPanel了。</p>
+<p style="padding-left: 30px;">打开cPanel，在里面找到“暂停的域”（Parked Domains）并打开。</p>
+<p style="padding-left: 30px;">里面有一个框框，输入你的tk域名（例如：laobubu.tk），然后按下回车，搞定。</p>
+<p style="padding-left: 30px;"></p>
+<strong>cPanel和VistaPanel还需要额外设置DNS[VistaPanel篇]</strong>
+<p style="padding-left: 30px;">是时候设置你的VistaPanel了。</p>
+<p style="padding-left: 30px;">打开VistaPanel，在里面找到“停放域名”（Parked Domains）并打开。</p>
+<p style="padding-left: 30px;">在“Domain Name”输入框内输入你的tk域名，然后按下回车</p>
+<p style="color: #ff0000;">本文作者laobubu@gmail.com，如果转载务必注明</p>

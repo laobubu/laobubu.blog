@@ -1,0 +1,74 @@
+---
+layout: post
+title: "[发布]Firefox插件：QRScaner（离线的QR码扫描器）"
+date: 2013-8-17 16:16:56
+permalink: /643
+categories: ["代码笔记和片段","发布","心情与牢骚"]
+tags: ["Chrome","Firefox","js","浏览器扩展"]
+published: true
+---
+<img alt="icon" src="http://blog.laobubu.net/wp-content/uploads/2013/08/icon.png" width="100" height="100" align="right" /> 因为Chrome的吃内存伤硬件不是开玩笑的夸张，老爷机表示带不动，所以转为使用Firefox了，而且有好一段时间了（虽然现在貌似Firefox可以吃掉½GB以上的内存）。话说发现Firefox上没有<strong>离线的QR码扫描器</strong>，于是就结合<a href="http://webqr.com/">http://webqr.com/</a>的代码写了一个。
+<h3>下载（45KB，安装无需重启Firefox）</h3>
+<ul>
+	<li>从 Firefox 插件中心下载： <a title="" href="https://addons.mozilla.org/zh-CN/firefox/addon/qrcode-scanneroffline/">https://addons.mozilla.org/zh-CN/firefox/addon/qrcode-scanneroffline/</a></li>
+	<li>从 Google Drive 下载： <a title="" href="https://docs.google.com/uc?export=download&amp;id=0ByeJNWxIubWTcTBuSGlKWHpzMDg">Click me</a></li>
+	<li>从 Dropbox 下载： <a href="https://www.dropbox.com/s/wz374d1m2mzubyb/qrscaner.xpi">qrscaner.xpi</a></li>
+	<li>源代码@GitHub： <a href="https://github.com/laobubu/QRScaner">https://github.com/laobubu/QRScaner</a></li>
+</ul>
+<!--more-->
+<h3>截图</h3>
+<img alt="" src="https://addons.cdn.mozilla.net/img/uploads/previews/full/111/111044.png" />
+<h3>关于制作的几件事</h3>
+此扩展使用了 <a href="http://webqr.com/">http://webqr.com/</a> 的js库，特此声明。还有就是扩展的代码GPLv2协议下发布（虽然我不知道怎么选许可证……）<br><br>好吧又到喜闻乐见的废话时间了……<br><br>Firefox 扩展的开发比 Chrome 的麻烦不是一点儿，因为不想安装那个庞大的扩展开发SDK，我遭遇了各种坑爹事情！<br><br>（感觉不会再开发了_(:з」∠)_）
+<h4>奇妙的窗口界面设计方法</h4>
+说来 Firefox 真是个有意思的东西，之前我还纠结为什么其扩展程序在多操作系统下都可以保持窗口界面的相同，后来发现是因为一个叫做XUL的奇妙东西，把窗口设计乃至菜单设计都变成了写 HTML 一样！<br><br>不太相信？试试在地址栏输入<code>chrome://browser/content/browser.xul</code>，然后回车，你会发现……（咳咳）<br><br>于是为了定位菜单，我会打开<a href="view-source:chrome://browser/content/browser.xul">[非 Firefox 勿点]</a>
+<h4>准备工作</h4>
+（貌似位置放错了，不管了）<br><br>关于环境配置，找到过很多乱七八糟的说法，其中有一个官方的鸟语网页，一看就好复杂的说：<a href="https://addons.mozilla.org/en-US/developers/docs/sdk/latest/dev-guide/tutorials/installation.html">https://addons.mozilla.org/en-US/developers/docs/sdk/latest/dev-guide/tutorials/installation.html</a><br><br>还有其他很多网站上（包括MDN）都提及传统的方法开发，需要各种扩展，比如 <a href="http://ted.mielczarek.org/code/mozilla/extensiondev/">http://ted.mielczarek.org/code/mozilla/extensiondev/</a> 里面的这一堆东西！！总之还是难用的很，比如那个啥啥Developer Assistant在我这打包xpi从来木有成功过。<br><br>于是我就准备Notepad2，mspaint，开始了。<br><br>哦对了忘记了，去 <a href="about:config">about:config</a> 添加一个整数值 <code>security.dialog_enable_delay = 0</code> 可以跳过安装扩展的倒计时。<br><br><h4>编写无需重启的Firefox扩展</h4>
+使用Chrome再来用Firefox会深深地恨上安装扩展后的重新启动浏览器。于是编这个扩展初期我在各种重新启动的等待中不知道烧了多少时间，后来按耐不住了，去网络上搜索了下，发现了个啥 <a href="https://developer.mozilla.org/en-US/docs/Extensions/Bootstrapped_extensions">Bootstrapped extensions</a>，其亮点就是安装和卸载这种扩展无需重新启动浏览器！而且给你的扩展附魔的方法很简单：
+<ol>
+	<li>修改manifest文件，加入<code>&lt;em:bootstrap&gt;true&lt;/em:bootstrap&gt;</code></li>
+	<li>在扩展的根目录下加上个bootstrap.js，内容先复制这的一份：<a title="bootstrap.js" href="https://developer.mozilla.org/en-US/docs/Extensions/bootstrap.js">https://developer.mozilla.org/en-US/docs/Extensions/bootstrap.js</a></li>
+</ol>
+是不是看见曙光了？别急。一切东西皆有代价。使用 Bootstrapped extensions 么？把你辛苦写的overlay全部丢一边去吧！有了这玩意儿，浏览器就不会管你的XUL了。<br><br>那么怎么加载扩展需要的界面元素呢？在bootstrap.js里面自己写吧，亲！！<br><br>哦对了，bootstrap.js里面你需要写的不仅仅是添加界面元素时候需要的冗长的代码，还有禁用扩展时恢复浏览器原样（就是移除你的修改）的代码！！！自己的代码做的界面修改要自己写代码打扫！！<br><br>还有就是，做那些变更不是以软件为单位，而是以窗口为单位。这意味着神马？意味着你要对每一个窗口都要做出那些操作！！！没错，对每一窗口都要addEventListener！然后扩展被禁用时候还要removeEventListener！
+<h4>我要打开新窗口，还要传个参</h4>
+图片的识别是在新窗口里，就是扫描结果窗口里完成的，于是传图片成为了奇妙的过程……
+下为部分记录，其实坑爹记录远远不止这三个的，了解一下吧
+<table>
+<tbody>
+<tr>
+<th>条目</th>
+<th>详细（可能有点儿压缩）</th>
+<th>最后</th>
+</tr>
+<tr>
+<td>新建标签页</td>
+<td><code>var tab1 = window.gBrowser.getBrowserForTab(
+window.gBrowser.addTab("http://随便来一个地址反正最后也是要死的")
+);
+tab1.addEventListener("load",
+function () {
+tab1.contentDocument.body【以下省略】
+}, false）;</code></td>
+<td>体验太奇葩，否决</td>
+</tr>
+<tr>
+<td>window.open+事件传参</td>
+<td><code>var win1 = window.open("http://随便来一个地址反正最后也是要死的");
+win1.addEventListener("load",
+function () {
+【省略】
+}, false）;</code></td>
+<td>window.open使用非网络地址直接不会鸟EventListener，失败</td>
+</tr>
+<tr>
+<td>window.opener传参</td>
+<td><code>window.__send_to_win = '我是参';
+var win1 = window.open("chrome://qrscaner.....");
+/* 然后在那个打开的页面里 */
+(window.opener.__send_to_win)</code></td>
+<td>成功！</td>
+</tr>
+</tbody>
+</table>
+<h3>再见假期，你好大学</h3>
+于是假期在无限颓废中飞啦，现在只有一周了有木有！于是接下来就是去UESTC学习了，据说这学校不过四级不给带电脑，鸭梨大大。。。<br><br>等过后再放上来一些假期的东西，本来是不打算让真身出现的，因为前两次在博客出现真身，结果服务器就挂了（这是真的！有服务器邮件和推文为证！），不过貌似可以再搞点补偿啦续期啦，Linost的主机虽然坑爹能耐杠杠的，但是还是知道补偿这点还好（话说回来UPTIME一向真心不行啊）。

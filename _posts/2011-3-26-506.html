@@ -1,0 +1,60 @@
+---
+layout: post
+title: "js牵扯到跨域传输的问题"
+date: 2011-3-26 14:1:30
+permalink: /506
+categories: ["代码笔记和片段"]
+tags: ["ajax","Google","html","js","域名","外交"]
+published: true
+---
+<img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/code.png" alt="" align="right" />如果你是一个搞网页代码的，想制作一个AJAX动态页面，但是需要使用到外网的数据，这下子你怎么办涅？<br><br>这就是倒霉的AJAX（或者直接就是JS）跨域传输问题。js里面虽然有强大的功能实现同域名下的数据互相访问，但是这里还是有一个杯子，其他域名上的数据不能获得，哪怕你是主域名，对方是你的子域名也不可以。<br><br>如果你没有跨域方面的问题，可以试试<a href="//blog.laobubu.net/212" target="_blank">我的这篇博文</a>里讲的做法。如果遇到了，那么请继续阅读……<br><br><!--more-->
+<h3>json格式的数据跨域传输——很雷人的事情</h3>
+<blockquote>首先先看一下json。json这种简洁的格式可以直接往js、python等语言里面丢，比如这句代码很正确地把变量a变成了一个美丽的数组：
+<blockquote>var a =
+{"name":"laobubu","contact":
+{"website":<span style="color: #888888;">"laobubu.net"</span>,"microblog":<span style="color: #888888;">"@laobubu"</span>,"email":<span style="color: #888888;">"laobubu@laobubu.net"</span>}
+};</blockquote>
+然后在需要的时候， a.name 就是 laobubu， 而 a.contact.website 就可以得到我的网站网址laobubu.net。<br><br>上面的大括号里面乱七八糟的东西就是json格式写的，如果换行和缩进比较清晰，应该还是很容易看明白的对不？好吧，json就简单提到这。现在回归问题：json数据传输。</blockquote>
+——————————
+<blockquote>刚才大家看见了，既然json可以直接用于赋值，那么假设我们有一个函数<span style="color: #000080;">show</span>(<span style="color: #008000;">data</span>)，写代码的时候也可以像这样喽：
+<blockquote><span style="color: #000080;">show</span>(<span style="color: #008000;">{"name":"laobubu"}</span>)<br><br>（保证可以正确运行）</blockquote>
+现在很多的服务API都提供json格式输出，同时有一个可选参数callback。为什么不利用一下呢？callback如果为myfunc，那么API返回数据就是【 myfunc({"a":"b"...})】，华丽、标准的js代码，可以运行就更完美了。<br><br>稍等，js里面可以动态添加script标签，而script可以引用其他域名下的js文件……好吧，利用之！<br><br>下面为一个现成函数doCall，可以跨域执行json的载入。
+<ul>
+	<li>API必须支持callback这货，而且，当然的，格式为json输出</li>
+	<li>你不要在url里面多一个callback=xxxx，除非：你有你的callback函数xxxx</li>
+	<li>还没有在FireFox、Opera下测试</li>
+</ul>
+</blockquote>
+<pre lang="java"><br><br>function doCall(url, callback) {
+	var c = 'lcback_'+Math.floor(Math.random()*748);
+	url = url + "&callback=" + c;
+	window[c] = window[c] || function(data) {
+		callback(data);
+		window[c] = undefined;
+		try {
+			delete window[c];
+		} catch(e) {}
+	};
+	var head = document.getElementsByTagName("head")[0] || document.documentElement;
+	var script = document.createElement("script");
+	script.src = url;
+	
+	var done = false;
+	script.onload = script.onreadystatechange = function() {
+		if ( !done && (!this.readyState === "loaded" || this.readyState === "complete") ) {
+			done = true;
+			script.onload = script.onreadystatechange = null;
+			if ( head && script.parentNode ) {
+				head.removeChild( script );
+			}
+		}
+	};
+	head.insertBefore(script, head.firstChild);
+}<br><br></pre>
+<h3>那么XML怎么办？</h3><br><br>
+<blockquote>json跨域很方便了，因为js里面可以直接用json格式的数据赋值。但是XML就杯具了。<br><br>拿我们老班的那套方法，把新问题转换为老问题。<br><br>XML -&gt; json ，然后再跨域发送。<br><br>这里我给大家提供一个好东西： <a href="http://code.google.com/intl/zh-CN/apis/feed/v1/jsondevguide.html">Google Feed API</a> 提供在线XML转json服务，同时还支持callback！<br><br>格式为：
+<blockquote>https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&amp;q=<span style="color: #008000;">要转换的XML的网址</span></blockquote>
+需要的时候代入就OK，不过如果你的XML地址里面有问号，记得可以像这样玩
+<blockquote>doCall('https://ajax.googleapis.com/ajax/services/feed/load?v=1.0&amp;q='+encodeURIComponent(<span style="color: #008000;">你的XML的网址</span>),<span style="color: #008000;">你的callback函数</span>);</blockquote>
+结贴</blockquote><br><br>
+<a href="http://lab.laobubu.net/json_crossd.htm">程序测试入口</a><br><br>

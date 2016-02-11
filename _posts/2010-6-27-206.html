@@ -1,0 +1,49 @@
+---
+layout: post
+title: "[更新]你管索引 2.0.0 preview 3"
+date: 2010-6-27 18:33:24
+permalink: /206
+categories: ["更新"]
+tags: ["cURL","php","youtube","你管索引"]
+published: true
+---
+<img src="http://code.google.com/p/youtubeindex/logo" alt="" align="right" />闷热的下午，在大量喷嚏声下（我感冒了），你管索引更新了。这次增强了空间支持：现在VistaPanel免费空间可以安装了！<strong>这样子你就有更大的空间选择权，不是吗？很多免费空间都是VistaPanel的</strong>……
+<blockquote>你管索引类似互联网上的TubeWall（电视墙），为中国网民提供YouTube上面的视频。<br><br>你管索引是一个开源项目，你可以在Google Code上面下载到源代码并且自己搭建。视频结果都要被进行过滤，这样可以防止你的站点因为出现不好的东西而被停止。在观看和下载视频的时候提供两种模式（普清和高清），使你看视频更爽！</blockquote>
+<!--more--><br><br><hr />
+<h3>升级啥呢？</h3>
+<blockquote>这次更新内容有
+<ul>
+	<li>图片代理使用cURL</li>
+	<li>搜索结果使用cURL（感谢li wei &lt;liwei0512@gmail.com&gt;的建议）</li>
+	<li>视频缓冲代理使用cURL（如果没有cURL会自动尝试老方法：fopen）</li>
+	<li>支持VistaPanel空间播放视频</li>
+	<li>解决播放器进度条错误</li>
+	<li>后台添加流量统计功能</li>
+	<li>自动强制UTF-8编码（感谢黑山老猫 &lt;sparrowcn@gmail.com&gt; 的issue）</li>
+</ul>
+播放列表搜索功能搁浅。</blockquote>
+<hr />
+<h3>体验一下先</h3>
+<blockquote>由<a href="http://youtaba.tk/" target="_blank">@ChipmunkCN</a>提供的空间：<a href="http://laobubu.youtaba.tk/ng">http://laobubu.youtaba.tk/ng</a><br><br>或者大家来试试看某个VistaPanel的效果 <a href="http://laobubu.cz.cc/ng/">http://laobubu.cz.cc/ng</a></blockquote>
+<hr />
+<h3>感觉很好，要搭建？</h3>
+<blockquote>欢迎选择你管索引，你可上这个网址下载最新版本（最新版本一般都在顶部且后面有绿色的“Featured”）
+<p style="padding-left: 30px;"><em>下载地址 </em><a href="http://code.google.com/p/youtubeindex/downloads/list"><em>http://code.google.com/p/youtubeindex/downloads/list</em></a></p>
+<strong>不过你必须遵守使用须知。</strong>
+<p style="padding-left: 30px;"><em>使用须知 </em><a href="http://code.google.com/p/youtubeindex/wiki/TermsOfUse"><em>http://code.google.com/p/youtubeindex/wiki/TermsOfUse</em></a></p>
+最后，记得搭建了后，独乐乐不如众乐乐。如果你想分享喜悦，就上 <a href="http://laobubu.tk/ng/">http://laobubu.tk/ng/</a> 提交一下你的网址吧，分享一下。<br><br>如果你想要得到本项目的实时更新，可以来这里找RSS或其他格式的订阅源：
+<p style="padding-left: 30px;"><em>订阅【你管索引】 </em><a href="http://code.google.com/p/youtubeindex/feeds"><em>http://code.google.com/p/youtubeindex/feeds</em></a></p>
+</blockquote>
+<hr />
+<h3>使用cURL干坏事的原理</h3>
+<blockquote>今天翻阅php手册时候发现了这种东西：<br><br>[php]<br><br>curl_setopt($ch, CURLOPT_HEADERFUNCTION, xxxxxx);
+curl_setopt($ch, CURLOPT_WRITEFUNCTION, xxxxxx);<br><br>[/php]<br><br>其中xxxxxx替换为某个function的名字。例如这样子<br><br>[php]
+...
+curl_setopt($ch, CURLOPT_WRITEFUNCTION, read_body);
+...
+function read_body($ch,$string){
+print($string);
+return strlen($string);
+}
+[/php]
+注意function里面的return很重要，否则cURL就停止下载了</blockquote>

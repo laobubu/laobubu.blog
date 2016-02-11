@@ -1,0 +1,30 @@
+---
+layout: post
+title: "[Windows]自己的URL协议"
+date: 2011-1-29 11:13:59
+permalink: /481
+categories: ["程序资源","自己动手教程"]
+tags: ["Windows","电脑","程序自动化","编程"]
+published: true
+---
+现在电脑上有一大堆很是奇特的URL协议。原来的HTTP、FTP……可以不说了。在看本文后面内容之前，请做一个小测试（可能部分浏览器不兼容）：
+<blockquote>
+<h4>你的电脑上真的装有这些软件么？</h4>
+你有迅雷吗？ <a href="thunderim:">[有]</a> <a href="javascript:alert('没有就拉倒 - laobubu');">[没有]</a>
+你有电骡资源的下载软件吗？ <a href="ed2k:">[有]</a> <a href="javascript:alert('没有就拉倒 - laobubu');">[没有]</a>
+你有Picasa吗？ <a href="picasa:">[有]</a> <a href="javascript:alert('没有就拉倒 - laobubu');">[没有]</a>
+你有QQ吗？ <a href="tencent://message/?uin=409049717">[有]</a> <a href="javascript:alert('没有就拉倒 - laobubu');">[没有]</a><br><br>……</blockquote>
+是不是感觉有点儿…囧呢？想不想自己打造一个类似 laobubu:blog 这种强大的前缀？Just do it。<br><br><!--more-->
+<h3>打造自己的URL协议</h3>
+<blockquote>实际上就是在注册表里面写一点东西就OK了。
+<ol>
+	<li>首先进入 regedit （有些爱装逼的非要进入regedt32），在 HKEY_CLASSES_ROOT 上面右键-&gt;新建-&gt;项 ，然后输入自己的协议名字（前缀），比如 laobubu。</li>
+	<li>在自己新建的项上面右键-&gt;新建-&gt;字符串值，输入【URL Protocol】这一串英文，回车即可。</li>
+	<li>在自己新建的项上面右键，然后新建一个叫做shell的项</li>
+	<li>在shell项上右键，新建叫open的子项</li>
+	<li>又为open项新建一个叫做command的子项</li>
+	<li>在右侧双击“(默认)”，输入要打开的程序地址，比如【notepad "%1" 】。注意不支持http之类的货色</li>
+</ol>
+然后就OK了。不过要注意的是，%1的值还是包含前缀的，就像 notepad "laobubu:test"。<br><br>利用它开发点啥软件吧。</blockquote>
+<h3>还有一个老套的</h3>
+<blockquote>以前见过这一套招儿：环境变量。<br><br>在我的电脑＞属性＞高级里面编辑，编辑后在开始菜单＞运行里面输入变量名，一回车。打开了。</blockquote>

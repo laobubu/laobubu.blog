@@ -1,0 +1,22 @@
+---
+layout: post
+title: "[更新]类图搜索、HTTP请求头修改器、教科书生成器"
+date: 2012-1-20 7:34:58
+permalink: /567
+categories: ["更新","程序实验室"]
+tags: ["Chrome","js","php","浏览器扩展","程序自动化"]
+published: true
+---
+<img src="http://lab.laobubu.net/chromeheaderedit/3.png" alt="" /><br><br>同标题，这次更新三个东西：类图搜索、HTTP请求头修改器（这两个都是Chrome扩展程序）和教科书生成器
+<!--more-->
+<h3>类图搜索</h3>
+<img src="https://lh3.googleusercontent.com/RYcqPKcmLqQkIUYZPrJygpxrou-yL63VoCjN_O-Df4bUnx4_U2XiY0nRQrrtM-dSPyhx5kQ2UA" alt="" align="right" />之前有许多人都反映说是点击一次就失灵的问题，我还想着如果找不到问题就重写，结果发现在代码的“点击”事件里面居然神奇地出现了window.close()。这个东西可以直接枪毙对右键菜单做出反应的能力。也不清楚是什么时候添加的了，总之看见这个我很是抓狂。删之！<br><br>然后就是选项界面修改了一下，添加若干CSS3元素（你可以在我的博客里发现CSS3的好玩东西哦）。<br><br>最后把这个扩展程序制作成了真正的多语言版本。现在支持英文和中文，由Chrome自动选择。<br><br><a href="https://chrome.google.com/webstore/detail/akckflgbfaeopcknodkjjjokacionlkk" target="_blank">【点击这里去Chrome Web Store下载】</a><br><br><hr /><br><br><h3>HTTP请求头修改</h3>
+<img src="http://lab.laobubu.net/chromeheaderedit/logo.png" alt="" align="right" />老版本的用户们收到更新了么？没有？没有就对了。老版本已经被我抛弃了。<br><br>之前在GR上看过一个有关新老程序员的差别的，其中有一条就是老程序员经历过失败，知道怎么做。结果现在我就遭遇大败了。<br><br><a href="https://chrome.google.com/webstore/detail/ifjodhmkegeoijhdkndcpacnmijpfgam" target="_blank">老版本</a>已经遭遇各种炮轰，随便看看发现各路用户的评分都是只有一颗星。现在随便摘抄一点评论过来看看：
+<ul>
+	<li><a href="https://profiles.google.com/100188103725170544930">Svend Ole Nielsen</a>如是说：呃……没指出怎么配置，浪费时间，垃圾设计……（Well - did not figure out how to configure it within a minute so out it went. Bad design..）</li>
+	<li><a href="https://plus.google.com/110580991801747434649">Stephan Hoyer</a>愤怒了：鸟用都没有！界面还很乱！（Does not work for me, UI is not clear）</li>
+	<li><a href="https://plus.google.com/116589317470856421043">Bob Rayner</a>很不爽：界面诡异！浪费时间！翻译垃圾！折腾十分钟了还用不成！（Bizarre user-interface. Wasted 10 minutes trying to make it work. Maybe some things got mangled by autotranslate...）</li>
+	<li><a href="https://plus.google.com/107518190538080144030">Azat Sattarov</a>咆哮道：根本用不成，界面还一点儿也不直观。（Doesn't work at all. Very unintuitive UI design.）</li>
+</ul>
+所以说杯具了呗。然后我浪费了三天时间重新写了一份，速度应该会好一点儿，顺带<a href="http://lab.laobubu.net/chromeheaderedit/#help" target="_blank">还有帮助手册</a>。<br><br>如果你有什么好建议，请留言。谢谢。<br><br><a href="https://chrome.google.com/webstore/detail/ppmibgfeefcglejjlpeihfdimbkfbbnm" target="_blank">【点击这里去Chrome Web Store下载新版本】</a><br><br><hr /><br><br><h3>教科书生成器</h3>
+<img src="http://lab.laobubu.net/textbuk/ge.jpg" alt="" align="right" />我估计没有多少人知道这个东西的存在，但是它真的存在，就如我在茫茫人海中大家不知道一样。<br><br>只要提交一副图片，设置相关参数就可以打造出类似右边图片的东西。试试看吧。<br><br><a href="http://lab.laobubu.net/textbuk" target="_blank">http://lab.laobubu.net/textbuk</a><br><br>此次更新添加了三个配色方案

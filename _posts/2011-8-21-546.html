@@ -1,0 +1,80 @@
+---
+layout: post
+title: "[API]Google的语音识别API，支持各种语言"
+date: 2011-8-21 15:18:23
+permalink: /546
+categories: ["互联网资源","代码笔记和片段","免费资源","发布","无聊乱做","程序和代码","程序实验室","程序资源","自己动手教程"]
+tags: ["Google","TTS","云"]
+published: true
+---
+<img src="http://www.google.com/intl/zh-CN_ALL/mobile/google-mobile-app/crop-voice.png" alt="" align="right" />没好用的智能机的孩子你伤不起啊有木有！成天都是倒霉Symbian60啊有木有！上次超流量下载了Google Search for S60，里面神奇的有“语音搜索”……然后就是今天碰到android手机了，自带一个语音输入法啊！这准确率杆杆地！不过根据我多秒经验，S60的废柴API库绝对没有这么完美的语音识别（玩过诺基亚的应该都知道，待机状态长按右软件那个出来的是自带的识别功能），所以肯定Google留了一手！<br><br><object width="480" height="400" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="http://player.youku.com/player.php/sid/XMjI1Njk2NzM2/v.swf" /><param name="allowfullscreen" value="true" /><param name="quality" value="high" /><param name="allowscriptaccess" value="always" /><embed width="480" height="400" type="application/x-shockwave-flash" src="http://player.youku.com/player.php/sid/XMjI1Njk2NzM2/v.swf" allowfullscreen="true" quality="high" allowscriptaccess="always" /></object>
+（软件见<a href="http://www.google.com/intl/zh-CN_ALL/mobile/google-mobile-app/">http://www.google.com/intl/zh-CN_ALL/mobile/google-mobile-app/</a>）<br><br>废话多了，现在看看Google的猥琐API之STT！（属于speech-api v1的recognize）
+<blockquote><strong>http://www.google.com/speech-api/v1/recognize?xjerr=1&amp;client=chromium&amp;lang=zh-CN</strong></blockquote>
+不过使用不是那么简单的哦……<!--more-->
+<h3>如何调用</h3>
+<blockquote>要使用这个API，你得先有一些心理素质：面对倒霉的FLAC格式，因为这个API<strong>只支持FLAC格式的数据</strong>，杯具啊。<br><br>不过你找到了<a href="http://blog.laobubu.net">我的博客</a>，那么你是幸福的，因为我已经为你准备了不少好东西了。（顺便说一句，如果要转载记得清楚地标注“来自<a href="http://blog.laobubu.net/">http://blog.laobubu.net</a>”，我信任你。）<br><br>现在看看如何请求数据：
+<ul>
+	<li>【URL】http://www.google.com/speech-api/v1/recognize?xjerr=1&amp;client=chromium&amp;lang=zh-CN</li>
+	<li>【方式】POST</li>
+	<li>【请求头】Content-Type:audio/x-flac; rate=16000</li>
+	<li>【POST】flac文件的数据</li>
+	<li>【URL里可选参数】&maxresults=返回结果数</li>
+</ul>
+如果你人品大爆发，你成功了，可以得到类似这个的结果
+<pre>{"status":0,"id":"54e1babccaa58682ffbb02ceb42aa47c-1",
+"hypotheses":[{"utterance":"测试程序","confidence":0.8556527}]}</pre>
+或者你的请求URL里设置了maxresults（比如 http://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=zh-CN&maxresults=10 ）你就会得到：
+<pre>{"status":0,"id":"fbf23a887b9ac2bfb630aa40dd1a776c-1","hypotheses":
+[
+{"utterance":"欢迎访问过的网址","confidence":0.7275984},
+{"utterance":"欢迎访问我的网站"},
+{"utterance":"欢迎访问我的网址"},
+{"utterance":"欢迎访问过的网站"},
+{"utterance":"白云访问过的网址"},
+{"utterance":"怀孕访问过的网址"},
+{"utterance":"欢迎访问有的网址"},
+{"utterance":"欢迎访问过的网址哦"},
+{"utterance":"白云访问我的网站"},
+{"utterance":"怀孕访问我的网站"}
+]
+}</pre>
+不过不简单哦</blockquote>
+<h3>实例</h3>
+<blockquote>
+<h4>Python代码</h4>
+<pre lang="python">
+#By laobubu.net
+import urllib2
+FILE='1.flac' #这里假设在当前文件夹下有一个叫1.flac的文件被识别
+url = 'http://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=zh-CN'
+audio=open(FILE,'rb').read()
+headers = {'Content-Type' : 'audio/x-flac; rate=16000'}
+req = urllib2.Request(url, audio, headers)
+response = urllib2.urlopen(req)
+print response.read().decode('UTF-8')</pre>
+<h4>PHP代码</h4>
+<pre lang="php"><br><br><?php 
+$ch = curl_init(); 
+curl_setopt($ch, CURLOPT_URL, "http://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=zh-CN&maxresults=10"); 
+curl_setopt($ch, CURLOPT_VERBOSE, 0); 
+curl_setopt($ch, CURLOPT_HEADER, 0);
+curl_setopt($ch, CURLOPT_POST, 1); 
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+curl_setopt($ch, CURLOPT_POSTFIELDS, file_get_contents('1.flac'));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: audio/x-flac; rate=16000")); 
+$data = curl_exec($ch); 
+curl_close($ch); 
+if ($data=json_decode($data,true)) {
+	echo "<ul>";
+	foreach($data['hypotheses'] as $i) echo "<li>".$i['utterance']."</li>";
+	echo "</ul>";
+} else {
+	echo "<i>识别出错</i>";
+}
+?></pre>
+</blockquote>
+<h3>头疼：FLAC文件格式</h3>
+<blockquote>这里我长话短说，google的flac也有限制，22050 Hz+201kbps还正常，如果比这个大多了就不对了。<br><br>不过还有最要命的问题，怎么生成FLAC文件？<br><br>没关系，这里有救星：flac.exe包下载<br><br><a href="http://datastorage.laobubu.net/FLAC.zip">http://datastorage.laobubu.net/FLAC.zip</a> <br><br>具体使用方法是【flac.exe 文件.wav】这样在命令行调用即可，测试得知：不支持MP3等格式，但是支持基本的wav格式。<br><br>至于其他环境下（如linux里）也有对应的flac下载。我没有怎么用过linux就不说啥了。<br><br>好了，你可以去制造你的app了，哈哈。</blockquote>
+<h3>来自laobubu实验室自动转换API</h3>
+<blockquote>为了方便，我写了一个python程序，放在Google App Engine上面，只要提交一个音频文件的URL(支持MP3、wav等常见格式)，且文件不大，就可以得到结果了哦。<br><br>API入口：<a href="http://laobubumf.appspot.com/stt/">http://laobubumf.appspot.com/stt/</a>
+备用入口：<a href="http://glab.laobubu.net/stt/">http://glab.laobubu.net/stt/</a><br><br>喜欢的话记得+1哦，当然<a href="http://laobubu.net/donate.html?from=stt">捐赠</a>我最不介意 :)</blockquote>

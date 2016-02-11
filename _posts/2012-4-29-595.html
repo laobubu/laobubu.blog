@@ -1,0 +1,56 @@
+---
+layout: post
+title: "[发布][AIR]Voice Inputer(语音输入)测试版"
+date: 2012-4-29 17:59:4
+permalink: /595
+categories: ["代码笔记和片段","发布","程序实验室"]
+tags: ["Flash制作的","Google","TTS","VoiceInputer","云","程序自动化"]
+published: true
+---
+<img src="http://lab.laobubu.net/voiceinputer/icon.png" alt="" align="right" />上周pyramid网友<a href="http://blog.laobubu.net/546/comment-page-1#comment-444">提出了一个相当有挑战性的计划</a>：在Flash中<a href="http://blog.laobubu.net/546">使用Google的语音识别API</a>来识别，同时还给出了一个视频（<a href="http://vimeo.com/8203323">vimeo</a>），在那个视频里某人只需要对着电脑说一句“open”就打开文件夹了，再说出文件名就打开对应文件了，还有说出“zoom in”就放大了……总之相当神奇。不过最猛的问题是：那个视频的语音控制系统是使用flash制作的！！<br><br>好了，废话不多说，先看看我的这个倒霉东西：Voice Inputer(语音输入)！
+<h3>项目主页&amp;下载地址</h3>
+<blockquote><span style="font-size: x-large;"><strong><a href="http://lab.laobubu.net/voiceinputer/">点击这里进入</a></strong></span>
+http://lab.laobubu.net/voiceinputer/<br><br>注意：欲使用此软件，您的操作系统需要Adobe AIR，如果没有，可以<a href="http://get.adobe.com/cn/air/">点击这里下载AIR»</a></blockquote><!--more-->
+<h3>使用方法</h3>
+<blockquote>
+<ul>
+	<li>对着麦克风说出你要输入的话（不用按什么按钮，直接打开软件就可以对着麦克风开始用了），然后停顿片刻……</li>
+	<li>当屏幕上出现文字时，你便可以接着说话，或者通过键盘↑和↓键选择其他的识别结果。</li>
+	<li>如果要暂停或继续输入，按下键盘的ESC键。</li>
+	<li>如果要设置有关输入音量的选项，请使用操作系统的音量控制面板进行修改。</li>
+</ul>
+</blockquote>
+<h3>有关Google语音识别API的若干补充信息</h3>
+<blockquote>我在 <a href="http://blog.laobubu.net/546">http://blog.laobubu.net/546</a> 已经写了不少，不过里面有一个错误：这个API不仅仅支持flac格式编码的数据。我到网络上搜索了一下，加上自己摸索，总结出这个API支持的content-type有以下三种mime：
+<ul>
+	<li>audio/x-flac （采用FLAC压缩）</li>
+	<li>audio/x-speex-with-header-byte 或者 audio/speex （采用<a href="http://www.speex.org/">speex</a>编码）</li>
+	<li>audio/L16 （采用PCM16编码wav，也就是未压缩的格式）</li>
+</ul>
+然后在MIME后面还要加上【; rate=码率】，一般的码率都是16000（电话标准？），经过测试Google的API最高支持到32000Hz，再向上就出问题了。<br><br>虽然flash支持的码率里没有32000，但是有22050（Microphone类变量的rate属性设置为22时取得此值），所以还是可用于flash的。（不过最后测试发现还要搞定跨域安全问题，这个我失败了，求高手指导！）<br><br>如果要在Flash里录音，可以试试看 <a href="http://code.google.com/p/micrecorder/">http://code.google.com/p/micrecorder/</a> 上面的源代码，只要把代码里有关rate的44改成22，44100改成22050即可。<br><br>&nbsp;</blockquote>
+<h3>Flash AS3里面如何在没有回放的情况下得到Microphone.activityLevel</h3>
+<blockquote>在AS3里面我们要得到当前麦克风电平（声音越大电平越高），一般都是用activityLevel()来获取，但是如果直接调用它，音响里会同时放出声音来。要屏蔽音响的回放，需要【setLoopBack(false);】，但是这样子activityLevel()就失效了。<br><br>比较损的方法是直接对原始数据动手。
+<pre lang="java">//可能需要导入<br><br>import flash.media.Microphone;
+import flash.events.SampleDataEvent;
+import flash.utils.getTimer;<br><br>//首先需要为mic（你的麦克风对象）加上自己的listener
+mic.addEventListener(SampleDataEvent.SAMPLE_DATA,mySampler);<br><br>//然后准备一个变量来存储无声持续的时间
+var mute_timer:Number=getTimer();<br><br>//开始动手
+private function mySampler(event:SampleDataEvent):void {
+if (event.data.readFloat()500) {//安静500ms
+		trace("已经没声音0.5秒了");
+		mute_timer = getTimer();
+	}
+} else {
+	mute_timer = getTimer(); //安静被打断，重新开始记安静时间
+}
+}</pre>
+然后就可以针对安静一定时长做一定事情了。</blockquote>
+<h3>最后牢骚话</h3>
+<blockquote>
+<ul>
+	<li>期中考要开始了，感觉我死定了！</li>
+	<li>Flash AS3各种大杂烩嘛，各种import蛋疼啊，各种addEventListener蛋疼啊！</li>
+	<li>本来要制作成Flash的SWF版本，但是测试下来在跨域上有问题，所以最后改为AIR版本了。</li>
+	<li>pyramid没上线了？</li>
+</ul>
+</blockquote>

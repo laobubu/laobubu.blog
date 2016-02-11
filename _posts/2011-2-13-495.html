@@ -1,0 +1,49 @@
+---
+layout: post
+title: "IPv6、紫狐浏览器"
+date: 2011-2-13 16:40:33
+permalink: /495
+categories: ["免费资源","无聊乱做","自己动手教程"]
+tags: ["Google","youtube","外交","瓷器"]
+published: true
+---
+<img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/China.png" alt="" align="right" />清华大学真的是一个很牛的地方，他们在IPv4枯竭之时和mozilla合作了，推出了一个叫做“紫狐”的浏览器。<br><br>此浏览器实际上也就是一个火狐浏览器而已，不过它不同的就是：拥有自己的Hosts列表。也就是说大多数IPv6网站都被使用IPv6访问。<br><br>紫狐浏览器下载地址还有很多，比如<a href="http://down.tech.sina.com.cn/page/49865.html">新浪</a>的就有一枚。<br><br>这个浏览器最大的宝藏就是……呃……现有IPv6的网站列表？有的人估计用得到，先拿出了……<!--more-->
+<h3>Hosts.ini</h3>
+<blockquote>这货是重量级的，一时不可以全部Copy到这里。下面为部分内容，要完整的请<a href="http://datastorage.laobubu.net/ZiHu_Host_Data.txt">访问这里下载</a>。<br><br><br><br><blockquote><code>2404:6800:4001::24 v23.lscache7.c.youtube.com
+2404:6800:4001::24 v23.lscache8.c.youtube.com
+2404:6800:4001::27 v24.lscache1.c.youtube.com
+2404:6800:4001::27 v24.lscache2.c.youtube.com
+2404:6800:4001::27 v24.lscache3.c.youtube.com
+2404:6800:4001::27 v24.lscache4.c.youtube.com
+2404:6800:4001:1::27 v24.lscache5.c.youtube.com
+2404:6800:4001::27 v24.lscache6.c.youtube.com
+2404:6800:4001::27 v24.lscache7.c.youtube.com
+2404:6800:4001:1::27 v24.lscache8.c.youtube.com
+2620:0:1cfe:face:b00c::3 www.v6.facebook.com
+2620:0:1cfe:face:b00c::3 apps.facebook.com
+2620:0:1cfe:face:b00c::4 login.v6.facebook.com
+2620:0:1cfe:face:b00c::7 m.v6.facebook.com
+2610:d0:face::9 www.lisp6.facebook.com
+2610:d0:face::9 m.lisp6.facebook.com
+2620:0:1cfe:face:b00c::3 static.ak.fbcdn.net
+2620:0:1cfe:face:b00c::4 s-static.ak.facebook.com</code></blockquote><br><br><br><br>事实证明，用这访问youtube，在我这里缓冲的很痛苦。</blockquote>
+<h3>IPv6Tool.bat</h3>
+<blockquote>这个不是紫狐的东西，是我编写的。功能嘛……提升IPv6在你电脑上的优先级、为你的电脑安装IPv6功能。<br><br>BAT文件，纯文字的，不带病毒，不信自己检查：<br><br><br><br><blockquote><code>ECHO →启动IPv6Helper服务
+net start 6to4
+ECHO →安装IPv6
+ipv6 install
+ECHO →隧道连接
+netsh int ipv6 set teredo client teredo.ipv6.microsoft.com
+ECHO →提高IPV6优先级
+netsh int ipv6 set prefix ::1/128 50 0
+netsh int ipv6 set prefix ::/0 40 1
+netsh int ipv6 set prefix 2002::/16 30 1
+netsh int ipv6 set prefix ::/96 20 3
+netsh int ipv6 set prefix ::ffff:0:0/96 10 4
+netsh int ipv6 set prefix 2001::/32 5 1
+ECHO →正在等待连接（这里的ping是为延时所用 :) ）
+ping 1.0.0.0 -n 1 -w 10000
+ECHO →隧道信息
+netsh int ipv6 show teredo
+ECHO →IP信息（请自己检查）
+ipconfig /all</code></blockquote><br><br><br><br>保存为一个bat文件（实际上是文本文件的一类吧）即可<br><br>这里还有一个压缩包，方便要携带此工具的人使用。内含此批处理文件以及绿色版紫狐浏览器（说白了是火狐）：<br><br><a href="http://datastorage.laobubu.net/softwares/ZihuBrowserGreenVersion-1.0.6-IPv6Tool.zip">ZihuBrowserGreenVersion-1.0.6-IPv6Tool.zip</a>下载(25MB)</blockquote>

@@ -1,0 +1,287 @@
+---
+layout: post
+title: "SynapticsPen 将笔记本触摸板变成一块画图区域（带源码和笔记）"
+date: 2014-2-16 16:6:6
+permalink: /651
+categories: ["代码笔记和片段","发布","我的程序","程序和代码","程序资源"]
+tags: []
+published: true
+---
+现在大多数的笔记本电脑都是用 Synaptics 的触摸板了，所以找这个公司的驱动妥妥的。接下来的内容是拿 Synaptics 的 SDK v1.0 做的一个小程序，C++ MFC 的（坑啊~）。功能嘛……将笔记本触摸板变成一块画图区域。虽然效果很挫，不过凑合还是可以用的。
+<h2>下载和源码</h2>
+<blockquote>程序下载
+<ul>
+	<li><a href="http://datastorage.laobubu.net/SynapticsPen.7z" target="_blank">laobubu垃圾房 (datastorage.laobubu.net)</a></li>
+	<li><a href="http://pan.baidu.com/s/15skpw" target="_blank">百度网盘</a></li>
+	<li><a href="https://www.dropbox.com/s/y9l7pvvfx6c52sg/SynapticsPen.7z" target="_blank">Dropbox</a></li>
+</ul>
+（基于<a href="https://github.com/laobubu/SynapticsPen/commit/efb85e8ecb6632f43295c094952a2e0ab3623cbc" target="_blank">这一个版本</a>的代码，使用VC6.0编译）<br><br>源代码：<a href="https://github.com/laobubu/SynapticsPen" target="_blank">https://github.com/laobubu/SynapticsPen</a><br><br>记得程序打开后手动点击“启动”，否则不会独占你的触摸板。</blockquote>
+<!--more-->
+呃，你居然点开了这个文章，好吧，笔记如下：
+<h2>不得不有的变量</h2>
+<pre lang="c">
+ISynAPI *pAPI = NULL;
+ISynDevice *pDev = NULL;</pre>
+<h2>装载</h2>
+<pre lang="cpp">HRESULT hRes = CoInitialize(0);
+if (hRes &amp;&amp; hRes != S_FALSE)
+return false; // Error other than already initialized on thread.
+long lHandle = -1;
+if (CoCreateInstance(_uuidof(SynAPI), 0,
+CLSCTX_INPROC_SERVER, _uuidof(ISynAPI), (void **) &amp;pAPI) ||
+pAPI-&gt;Initialize() ||
+pAPI-&gt;FindDevice(SE_ConnectionAny, SE_DeviceTouchPad, &amp;lHandle) ||
+pAPI-&gt;CreateDevice(lHandle, &amp;pDev))
+{
+AfxMessageBox(IDS_CANNOT_LOADAPI,16);
+return false; // Couldn't initialize properly.
+}</pre>
+<h2>设置Listener</h2>
+好吧这个叫法貌似是Java里的，不过无所谓了，知道意思即可。<br><br>将class继承 _ISynDeviceEvents （ public _ISynDeviceEvents ），<br><br>还有加入方法 HRESULT STDMETHODCALLTYPE OnSynDevicePacket(long lSequence);<br><br>然后就可以 pDev-&gt;SetSynchronousNotification(this);
+<h2>读取点的信息</h2>
+<pre lang="c">HRESULT STDMETHODCALLTYPE 你的类::OnSynDevicePacket(long lSequence) {
+pDev-&gt;LoadPacket(m_Packet);
+printf("p %d\n",m_Packet.ZRaw());
+return 0;
+}</pre>
+注意这里的 m_Packet 是另外声明的 SynPacket 类型的对象。
+<h3>SynPacket类的方法</h3>
+SynPacket把 ISynPacket 里面诸多蛋疼的东西搞得好看了一些，以下为官方文档：
+<h4>最基本的方法（继承自ISynPacket）</h4>
+<ul>
+	<li>GetLongProperty(属性名, *容器)</li>
+	<li>Copy(*src)</li>
+</ul>
+<h4>爽到飞起的方法</h4>
+<table>
+<tbody>
+<tr>
+<th>返回值</th>
+<th>名字</th>
+<th>备注</th>
+</tr>
+<tr>
+<td>long</td>
+<td>AssociatedDeviceHandle()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>SequenceNumber()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>TimeStamp()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>W()</td>
+<td>触摸物体的Width，胖手指用户要注意哈。</td>
+</tr>
+<tr>
+<td>long</td>
+<td>X()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>Y()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>Z()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>XRaw()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>YRaw()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>ZRaw()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>ZXRaw()</td>
+<td>貌似是计算Z值时使用的坐标。</td>
+</tr>
+<tr>
+<td>long</td>
+<td>ZYRaw()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>XDelta()</td>
+<td>和前一个Packet相差的距离。</td>
+</tr>
+<tr>
+<td>long</td>
+<td>YDelta()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>ZDelta()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>XMickeys()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>YMickeys()</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>ExtendedState()</td>
+<td>Synaptics内部使用的，没资料。</td>
+</tr>
+<tr>
+<td>long</td>
+<td>FingerState()</td>
+<td>参考 SynFingerFlags Enumeration</td>
+</tr>
+<tr>
+<td>long</td>
+<td>ButtonState()</td>
+<td>参考 SynButtonFlags Enumeration</td>
+</tr>
+</tbody>
+</table>
+&nbsp;
+<h3>包很多，给包一点缓冲</h3>
+实测时候会发现哪怕轻轻一摸，数据包的数量也是超大的，所以可以考虑搞一个缓冲空间，就像官方example里给的这个PacketBuffer类：
+<pre lang="cpp">class PacketBuffer
+{
+public:
+enum numbers { eSize = 128 };<br><br>PacketBuffer(void)
+{
+m_uiCurrent = 0;
+m_iUnread = 0;
+}<br><br>int NextLocation(void)
+{
+m_iUnread += m_iUnread == eSize ? 0 : 1;
+return m_uiCurrent++ % eSize;
+}<br><br>void Add(PacketData &amp;Packet)
+{
+m_Packets[NextLocation()] = Packet;
+}<br><br>PacketData *Read(void)
+{
+if (m_iUnread)
+return m_Packets + ((m_uiCurrent - m_iUnread--) % eSize);
+else
+return 0;
+}<br><br>int Unread(void) { return m_iUnread; }<br><br>PacketData m_Packets[eSize];
+int m_iUnread;
+unsigned int m_uiCurrent;
+};</pre>
+<h3>关于坐标的事情</h3>
+这个坐标建系得就像某些游戏SDK（还有数学课本）一样，以左下角为原点，直角坐标系。而且原点貌似不是 (0,0)，在我的电脑上是(1024,1024)，具体可能和设备相关。<br><br>解决方法是使用前面的pDev来获取 xMin xMax。
+<pre lang="cpp">pDev-&gt;GetProperty(SP_XLoSensor, &amp;m_XMin);
+pDev-&gt;GetProperty(SP_XHiSensor, &amp;m_XMax);
+pDev-&gt;GetProperty(SP_YLoSensor, &amp;m_YMin);
+pDev-&gt;GetProperty(SP_YHiSensor, &amp;m_YMax);</pre>
+<h2>旋转触摸板</h2>
+就像旋转屏幕一样，会使你感觉很纠结。。。此代码为官方示例代码：
+<pre lang="cpp">    long lVerticalFlags = 0;
+    long lHorizontalFlags = 0;
+    m_pDevice-&gt;GetProperty(SP_VerticalScrollingFlags, &amp;lVerticalFlags);
+    m_pDevice-&gt;GetProperty(SP_HorizontalScrollingFlags, &amp;lHorizontalFlags);<br><br>    // adjust the scrolling direction flags based on rotation angle
+    switch(Angle) {
+    case 0:
+      lVerticalFlags &amp;= ~SF_ScrollingReversed;
+      lHorizontalFlags &amp;= ~SF_ScrollingReversed;
+      lVerticalFlags &amp;= ~SF_ScrollingAxisSwapped;
+      lHorizontalFlags &amp;= ~SF_ScrollingAxisSwapped;
+      break;
+    case 90:
+      // Right means up, left means down, 
+      // up means left, and down means right.
+      lVerticalFlags &amp;= ~SF_ScrollingReversed;
+      lHorizontalFlags |= SF_ScrollingReversed;
+      lVerticalFlags |= SF_ScrollingAxisSwapped;
+      lHorizontalFlags |= SF_ScrollingAxisSwapped;
+      break;
+    case 180:
+      lVerticalFlags |= SF_ScrollingReversed;
+      lHorizontalFlags |= SF_ScrollingReversed;
+      lVerticalFlags &amp;= ~SF_ScrollingAxisSwapped;
+      lHorizontalFlags &amp;= ~SF_ScrollingAxisSwapped;
+      break;
+    case 270:
+      // Right means down, left means up, 
+      // up means right, and down means left.
+      lVerticalFlags |= SF_ScrollingReversed;
+      lHorizontalFlags &amp;= ~SF_ScrollingReversed;
+      lVerticalFlags |= SF_ScrollingAxisSwapped;
+      lHorizontalFlags |= SF_ScrollingAxisSwapped;
+      break;
+    }<br><br>    // Set the new scrolling directions
+    m_pDevice-&gt;SetProperty(SP_VerticalScrollingFlags, lVerticalFlags);
+    m_pDevice-&gt;SetProperty(SP_HorizontalScrollingFlags, lHorizontalFlags);<br><br>    // Set the new motion angle.
+    m_pDevice-&gt;SetProperty(SP_MotionRotationAngle, Angle);<br><br>    // Make new settings persistent
+    m_pAPI-&gt;PersistState(SF_PersistMachine);</pre>
+<h2>对触摸板的其他操作</h2>
+<h3>禁止触摸板</h3>
+<pre lang="cpp">
+pDev-&gt;SetProperty(SP_DisableState, 1);
+</pre><br><br>这个会导致包括自身在内不能获取触摸板的点击的信息
+<h3>独占触摸板</h3>
+<pre lang="cpp">
+pDev-&gt;Acquire(0);
+</pre>
+执行此代码后目前程序仍然可以获取点击的信息，但是其他程序无法获取，包括操作系统。<br><br>至于为什么参数是0，这个是规定，貌似目前还没有解释。<br><br>&nbsp;
+<pre lang="cpp">
+pDev-&gt;Unacquire();
+</pre>
+释放触摸板，其他程序可以使用之。
+<h2>最后工作</h2>
+<pre lang="cpp">
+CoUninitialize();
+</pre>
+据说这样好，如果你没有搞其他的COM东西的话……<br><br>此外还有就是如果你屏蔽了触摸板，记得恢复哈~
+<h2>附：显示MFC里printf的输出</h2>
+MFC 可以 printf 但是它不会自动打开输出窗口，这里有一段代码很好用的，不妨试试。
+<pre lang="cpp">
+#ifdef _DEBUG
+#include &lt;io.h&gt;
+#include &lt;fcntl.h&gt;
+void OpenConsole()
+{
+	AllocConsole();
+	HANDLE handle   =   GetStdHandle(STD_OUTPUT_HANDLE);
+	int hCrt   =   _open_osfhandle((long)handle,_O_TEXT);
+	FILE   *   hf   =   _fdopen(   hCrt,   "w"   );
+	*stdout   =   *hf;
+}
+#endif</pre>
+再在主函数里加入
+<pre lang="cpp">
+#ifdef _DEBUG
+OpenConsole();
+#endif</pre>
+<h2>其他事情</h2>
+估计有人好奇为什么 Windows 7 了还使用老掉牙的 VC6，这里稍微说一下吧……
+<ul>
+	<li>本来要用 VC 2012 之类的高端版，但是据说默认编译出来的程序不支持 XP 等老系统</li>
+	<li>然后转战 VC 2010 ，但是不知道为什么打死安装不上……</li>
+	<li>然后是同学推荐的 C-Free 。这个嘛……MINGW32杀手，而且各种运行不了的奇葩问题。</li>
+	<li>要点来啦！课本都是 VC6 的说~</li>
+	<li>已准备 Code::Blocks 为备胎。</li>
+</ul>
+还有就是MFC，用起来感觉差不多啊（好吧貌似现在只有这个选择），虽然每一次面对MFC都有一种要撞墙的冲动。还有就是为什么MFC里方法第一个字母都是大写？！接受不了啊。<br><br>此外就是这个程序了。打算近期购入一个数位板烧钱玩玩，但是屌丝心态还是叫我仍然在这里写奇怪的东西YY。
+最后证明，笔记本触摸板真的不能代替数位板，但是拿它来对付 OSU 里面的转盘，妥妥的！

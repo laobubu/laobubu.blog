@@ -1,0 +1,76 @@
+---
+layout: post
+title: "在HTML中实现跨浏览器的复制功能"
+date: 2010-6-14 20:10:34
+permalink: /129
+categories: ["代码笔记和片段"]
+tags: ["Flash","html","js"]
+published: true
+---
+<img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/code.png" border="0" alt="Code" align="right" />今天<a href="https://twitter.com/zilaishui">@zilaishui</a>在twitter上和我<a href="https://twitter.com/zilaishui/status/16132289261">提到了一些关于浏览器内复制功能的若干问题</a>，这里总结并分享一下相关的代码。<br><br>查资料得，IE下我们可以使用很劣的方法来实现文字的复制：
+<blockquote>window.clipboardData.<span style="color: #000080;">setData</span>(<span style="color: #008000;">"Text"</span>, <span style="color: #008000;">"我在复制文字"</span>);</blockquote>
+但是在非IE内核的浏览器里面，这种方法行不通的。不过有意思的是Flash里面也有相关函数
+<blockquote>System.<span style="color: #000080;">setClipboard</span>(<span style="color: #008000;">"我在复制文字"</span>);</blockquote>
+那么就拿来用一下……
+<!--more-->
+<h3>先来一个简单但不美观的</h3>
+<blockquote>自来水同学提供的“<a href="http://204.152.214.114/~xiaohexi/php_test.php">百度贴吧和谐测试器</a>”在非IE浏览器里面会调用一个开源的程序：<a href="http://code.google.com/p/zeroclipboard">ZeroClipboard</a>
+<blockquote>zeroclipboard是结合JavaScript和Flash的Web文本复制脚本，兼容多个浏览器和最新的Flash</blockquote>
+你可以访问这个地址下载他们的程序:
+<blockquote><a href="http://code.google.com/p/zeroclipboard/downloads/list">http://code.google.com/p/zeroclipboard/downloads/list</a></blockquote>
+然后解压缩test.html、ZeroClipboard.js和ZeroClipboard.swf，打开test.html就可测试之了。<br><br>以下为我总结的使用方法：
+<blockquote>①把ZeroClipboard.js和ZeroClipboard.swf复制入你的html所在文件夹。
+②在&lt;/head&gt;前面加入这些代码
+<pre lang="html">
+<script type="text/javascript" src="js/ZeroClipboard.js"></script>
+<script language="JavaScript">
+var clip=null;
+document.body.onload = function() {
+clip = new ZeroClipboard.Client();
+clip.setHandCursor(false);<br><br>clip.addEventListener('mouseOver', function (client) {
+clip.setText("要复制的字符串");
+});<br><br>clip.addEventListener('complete', function (client, text) {
+alert('已经复制到剪贴板');
+});<br><br>clip.glue( 'd_clip_button', 'd_clip_container' );
+}
+</script>
+</pre>
+③添加“复制”按钮，可以像这样：
+<pre lang="html">
+<div id="d_clip_container" style="position: relative; display: none;"><input id="d_clip_button" type="button" value="复制到剪贴板（需Flash Player9+）">
+</pre>
+</div>
+</blockquote>
+不过这个东西实测中发现它有很严重的毛病：复制按钮白占一行。
+这是个杯具。</blockquote>
+<h3>自己制作一个</h3>
+<blockquote>毛泽东说过：
+<blockquote>自己动手，丰衣足食</blockquote>
+作为一个写程序的，不应该总是拿别人的代码东拼西凑。现在就利用其原理进行编写！<br><br>我们知道IE里头有window.clipboardData这种东西，但是其他浏览器没有。那么为什么不利用一下呢？
+像这样写代码即可作出基础的判断……
+<pre lang="html">
+<script language="JavaScript">
+if (window.clipboardData) {
+window.clipboardData.setData("Text", "要复制的字符串");
+alert('已经复制到剪贴板');
+} else {
+alert('你未在使用IE，请手动处理。');
+}
+</script>
+</pre>
+……不过这样就把其他用户忽视了。而且，那个“System.setClipboard”我们还没有使用到呢！<br><br>现在打开Flash（MX 2004或更高版本），在第一帧就写下这个东东
+<pre lang="java">System.setClipboard(_root.M);</pre>
+把它输出为swf，起名叫做“copy.swf”，和html文件放一起。
+随后我们只要把那个警告用的代码修改成这个就OK了……
+<pre lang="java">
+var flashcopier = 'flashcopier';
+if(!document.getElementById(flashcopier)) {
+var divholder = document.createElement('div');
+divholder.id = flashcopier;
+document.body.appendChild(divholder);
+}
+document.getElementById(flashcopier).innerHTML = '';
+document.getElementById(flashcopier).innerHTML = '<embed src="copy.swf" FlashVars="M='+encodeURIComponent("要复制的字符串")+'" width="0" height="0" type="application/x-shockwave-flash"></embed>';
+alert('复制完毕');
+</pre>
+就这样子</blockquote>

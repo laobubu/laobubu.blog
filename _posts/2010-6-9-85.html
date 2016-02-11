@@ -1,0 +1,124 @@
+---
+layout: post
+title: "使用php自制自己的Twitter锐推机器人"
+date: 2010-6-9 6:1:14
+permalink: /85
+categories: ["代码笔记和片段","发布","程序实验室"]
+tags: ["php制作的","Twitter","中文锐推客","程序自动化"]
+published: true
+---
+<img src="https://s3.amazonaws.com/twitter_production/profile_images/279853426/sr_normal.gif" alt="twitter上面流行的机器人@rtmeme" width="120" height="120" align="right" /><a href="https://twitter.com/">twitter</a>是全球第一的微博客，在那里每一秒都有新信息发布。你可以在里面看见大家的生活的杯具和洗具。不过如此众多的网友和海量的信息，怎么对付？这是一个问题。幸好有人鼓捣出了“<a href="http://rt.ju690.cn" target="_blank">玩聚</a>”机器人，可以把大家都关注的twitter信息RT(转发)出来。当前最被大家关注的机器人就是@<a rel="nofollow" href="https://twitter.com/rtmeme">rtmeme</a>！<br><br>不过说实话个人感觉有时候这机器人真有点“不和谐”，说白了就是政治热点时候特积极。我的一个朋友 <a href="https://twitter.com/ChipmunkCN">@ChipmunkCN</a> 在香港公投时候<a href="https://twitter.com/ChipmunkCN/status/14091276675" target="_blank">感叹</a>道：
+<blockquote>今天 @<a rel="nofollow" href="https://twitter.com/rtmeme">rtmeme</a> 好积极！</blockquote>
+实际上可能是大家都在讨论吧。不过自己做一个机器人玩玩也不是坏主意……呵呵<!--more-->
+<h3><strong><span style="color: #800000;">更新（2010年8月18日）</span></strong></h3>
+<blockquote><strong>全新的程序已经存放在</strong><a href="http://code.google.com/p/retweetrobot/"><strong>http://code.google.com/p/retweetrobot/</strong></a><strong>。本文的代码实际上是对机器人的初步探索，要获取相对优秀的版本请访问上面的链接</strong></blockquote>
+说多了，先来看看程序怎么做
+<h3>收集RT</h3>
+<blockquote>首先是搜索推，以“RT”为关键词，“zh”为语言进行搜索。还好twitter提供了一套的API可供折腾。<br><br>我们用这个URL来得到搜索结果。<br><br>http://search.twitter.com/search.atom?lang=zh&amp;q=RT&amp;rpp=90<br><br>（rpp意思是显示多少个结果，一般的在1-100间）<br><br>如果你开了特殊工具上那个地址，你可以去看看先，格式很规律。<br><br>随后就是用simplexml_load_string(字符串)或者simplexml_load_file(网址)载入之，使其变成我们好解析的东西。<br><br>试试这个代码吧，屏幕上会输出许多RT信息的。
+[php]
+$xml = simplexml_load_file("http://search.twitter.com/search.atom?lang=zh&amp;q=RT&amp;rpp=90");
+foreach ($xml-&gt;entry as $entry) {
+$str = $entry-&gt;title;
+print($str);
+print("&lt;hr&gt;");
+}
+[/php]
+_</blockquote>
+<h3>确定这推是否真的很热门</h3>
+<blockquote>随后还要确定是否有许多人都RT过，确保信息的优良性。
+此时你可以提取推里面的前几个字作为关键词进行搜索。不过要注意一些事情：
+<p style="padding-left: 30px;"><strong>twitter的API搜索中，中文之间要有空格，否则什么也得不到！</strong></p>
+就是这样杯具。我估计是一个bug。由于我们不是twitter的管理者，因此只好适应它。<br><br>首先，我们要找到最靠右边的那个信息（原始推），把它提取出来
+[php]
+if (substr_count($str,'RT @')&lt;1)  continue; //连【RT @】也没有，不管这条锐推了
+$str = strrchr($str,'RT @');
+if (strpos($str,':')&gt;10 | strpos($str,':')==false | strlen($str)&lt;40 | substr($str,0,4)!="RT @")  continue; //继续过滤
+$str2 = substr(strstr($str,':'),2);
+[/php]
+<div>就这样，我们提纯了原来的推（不包含用户名的），放在 $str2 这个变量里面。</div>
+<div>随后就是适应twitter的bug，像这样写php代码</div>
+[php]
+$t='';
+for ($i=0;$i&lt;10;$i++) {
+$t.=mb_substr($str2,$i,1,'UTF-8').' ';
+}
+$t=trim($t);
+[/php]
+上面的代码中$t这个变量最后可以得到每个字都有空格间隔的字符串，用于搜索。不过要注意的是$str2就是原文。除此之外，<strong>服务器必须有mb_*这类增强的字符串函数的支持</strong>！（我试过不使用mb系列函数，会有乱码）
+<p style="padding-left: 30px;"><strong>2010年6月9日更新：使用这个代码，效果更好↓</strong></p>
+<strong> </strong>由于$str2一个中文字占3个英文字（3 byte），所以还可以像这样写代码防止拆散英文单词
+[php]
+$t="";
+for ($i=0;$i&lt;13;$i++) {
+$tt=substr($str2,$i,1);
+if (ord($tt)&lt;0 | ord($tt)&gt;128) {
+$t.=" ".substr($str2,$i,3)." ";
+$i+=2;
+} else {
+$t.=$tt;
+}
+}
+$t=trim(str_replace("  "," ",$t));
+[/php]<br><br>随后就可以得到URL开始验证……看看有多少个RT……
+[php]$xml_check = simplexml_load_file('http://search.twitter.com/search.atom?lang=zh&amp;q='.urlencode($t).'&amp;rpp=100');
+[/php]
+<blockquote>urlencode可转换一些字符为那些带有百分号的乱七八糟，<br><br>例如<strong><span style="text-decoration: underline;">ｌａｏｂｕｂｕ</span></strong>这个全角字符串会变成<br><br><strong><span style="text-decoration: underline;">%EF%BD%8C%EF%BD%81%EF%BD%8F%EF%BD%82%EF%BD
+</span></strong><strong><span style="text-decoration: underline;">%95%EF%BD%82%EF%BD%95</span></strong><br><br>（UTF-8编码格式的环境）</blockquote>
+这样你就可以用这个函数获取得到多少entry（推的搜索结果项）
+[php]count($xml_check-&gt;entry)[/php]
+使用if语句，用大于号小于号判断，自己折腾去！</blockquote>
+<h3>发现好推，立即转发</h3>
+<blockquote>问题现在发现了好推，你还犹豫什么？赶快转发吧。这里我提供一个BasicAuth的发推代码，需要cURL组件的支持。
+[php]
+function post($msg) {
+$url = 'http://twitter.com/statuses/update.xml';
+$curl_handle = curl_init();
+curl_setopt($curl_handle, CURLOPT_URL, $url);
+curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
+curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($curl_handle, CURLOPT_POST, 1);
+$postargs = array(
+"status" =&gt; $msg
+);
+curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $postargs);
+curl_setopt($curl_handle, CURLOPT_USERPWD, "USERNAME:PASSWORD");<br><br>//上面的用户名和密码自己修改掉
+curl_setopt($curl_handle, CURLOPT_HTTPHEADER, array('Expect:'));
+$buffer = curl_exec($curl_handle);
+curl_close($curl_handle);
+}
+[/php]<br><br>把这个放在你的php文件顶部即可在任意时候调用这东西发推了：<br><br>[php]
+post("啊哈，我的腿。");
+post("OMG，打错字了！ #FML");
+[/php]<br><br>不过我们要的是转发。没关系。<br><br>还记得前面我们提纯$str2前面时，对$str做过一些手脚么？现在可以利用了：<br><br>[php]
+post($str);
+[/php]</blockquote>
+<h3>凑合成我们的机器人</h3>
+<blockquote>现在基本核心都有了，可以安心做出机器人了。我们的代码应该像这样的
+[php]
+&lt;?php
+/* 发推的函数post()的代码 */<br><br>/* 以关键词为RT，取得 $xml */
+foreach ($xml-&gt;entry as $entry) {
+$str = $entry-&gt;title;
+/* 验证和提纯 */
+if (count($xml_check-&gt;entry)&gt;10) { //至少10人RT过
+/* 发推 */
+}
+}
+?&gt;
+[/php]
+（在验证和提纯那一步里面continue意思是忽略下面的代码，继续进行循环）<br><br>随后保存为my_robot.php或什么的即可。</blockquote>
+<h3>把机器人发送到真正的互联网</h3>
+<blockquote>接下来就简单了，你只要把这个php机器人发布到一个cPanel的空间里即可。
+那个空间可以是被墙的，因为cPanel提供Cron Jobs（时钟守护作业？计划任务吧），可以让它定时运行php！<br><br>上传到一个空间，登陆进入cPanel，进入Cron Jobs（时钟守护作业）
+（老版本cPanel会有两个选项，你选择Unix或高级什么的那个按钮即可）
+在Add New Cron Job那边按照这样写时间安排
+<blockquote>Minute:	*/10
+Hour:		*
+Day:		*
+Month:	*
+Weekday:	*</blockquote>
+在Command（命令）里面像这样写
+<blockquote>/usr/bin/php -q /home/<strong>CPANEL用户名</strong>/public_html/<strong>my_robot.php</strong></blockquote>
+添加即可<br><br>最后你必须做的就是去follow你的机器人，然后登陆你的机器人的twitter，让它也follow你。
+还有就是推广。<br><br>不过吃水不忘打井人，记得让它也follow @laobubu 啊！</blockquote>
+本文中的机器人的代码已经运行于 @RTKcn 。

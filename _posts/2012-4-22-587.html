@@ -1,0 +1,80 @@
+---
+layout: post
+title: "[HTML5实验]函数之音（js生成wav以及HTML5初探）（附初中声学大揭秘）"
+date: 2012-4-22 7:56:31
+permalink: /587
+categories: ["发布","程序实验室"]
+tags: ["Chrome","html","js","音乐"]
+published: true
+---
+<img src="http://lab.laobubu.net/soundimg/res/logo.png" alt="" align="right" />不得不说，HTML5的推出是相当振奋人心的。其带来的大量好玩新东西几乎使得Flash站不住脚了。比如canvas就是一个好玩的例子，网络上已经有不少用这类东西做的玩意儿了。<br><br>废话不多讲，这次我为了测试了一下HTML5的Canvas和Audio标签（以及搞定<a href="https://twitter.com/laobubu/status/192515312359448576" target="_blank">上次的计划</a>），写了一个小程序。此程序可以让你输入一个函数然后得到对应的音频（不是TTS，就是你的函数表示的音波！）。现在已经在chrome和firefox测试过，可以使用。
+<h3>开始试玩</h3>
+<blockquote><span style="font-size: x-large;"><strong><a href="http://lab.laobubu.net/soundimg/" target="_blank">点击这里进入</a></strong></span>
+http://lab.laobubu.net/soundimg/（暂不支持手机）</blockquote>
+<!--more-->
+<h3>成功记录</h3>
+<blockquote>之前实际上我是想把这个功能的东西单独写成一个app的，但是我没有触摸屏设备（现在手机仍然symbian，而且是S60v3FP2），所以也就放弃了。某天突然想到，可以试试看base64编码生成的音频，这样子就不要服务器和app的支持了！<br><br>说干就干，结果刚开始对canvas不熟悉，去网络上查找大量资料才稍微知道……
+<h4>Canvas简单用法</h4>
+首先在网页里写上一个canvas标签，给一个id，还有width、height参数（不用写单位）。<br><br>忘记说了，canvas的绘制是在js里完成的。。。<br><br>开始写JS,然后<span style="text-decoration: underline;">var d=document.getElementById('你的canvas的ID').getContext("2d");</span> 就可以得到Graphics了，这个有点像JAVA的，不过方法上几乎不相干。<br><br>以下为若干简单的用法：
+<pre lang="java">/* from laobubu.net */
+d.clearRect(x,y,宽,高); //清空（使用透明色填充）
+d.drawImage(image,x,y[,宽,高]); //绘图（image可以直接用HTML的img）
+d.strokeStyle="rgba(255,255,255,0.5)"; //设置画笔颜色 为半透明的白色
+d.beginPath(); //准备画线
+d.moveTo(x,y); //将笔移动到指定位置
+d.lineTo(x,y); //从上一步位置开始画线到另外一个位置
+d.stroke(); //结束画线
+d.strokeText("HELLO WORLD",0,0); //写字，使用的颜色和strokeStyle一样
+d.fillStyle='#FF0000'; //设置填充色
+d.fillRect(x,y,宽,高); //填矩形
+/* end */</pre>
+还有就是声音。这里我用的是 <a href="http://codebase.es/riffwave/" target="_blank">http://codebase.es/riffwave/</a> 的JS代码，可以生成base64格式的路径。用法在上面那个链接里了，不过这东西默认是搞出来PCM8的，如果你想upsample（搞出更清晰的音频），这里主要讲一下：
+<h4>将RIFFWAVE从PCM8升级为PCM16</h4>
+先复习一下初中物理，如果你觉得可以省略就跳过：
+<ul>
+	<li>声音是靠不断震动才产生的，当东西停止了震动，它就不发出声音了。</li>
+	<li>不同的震动会产生不同的声响。</li>
+	<li>震动不同的原因有许多，比如快慢（频率）、幅度（振幅）和音色。</li>
+	<li>注意了！这里的“音色”是逗初中小娃娃的说法，实际上就是震动的方式（书上说是因为泛音的振动导致音色不同的，不过最后各种振动，包括泛音的，叠加起来就会成为一个新的声波振动，也就是你最后听到的有特殊音色的声），你可以让喇叭里的那个薄膜以像正弦函数图象的方式一样前后震动（然后你得到正弦波），也可以突然最前突然又最后（方波），也可以匀速向前运动到某个位置突然跳到最后再匀速向前（锯齿波）啥的。</li>
+	<li>虽然这样说，但是你一般看不清楚震动，因为物体要震动得相当快才可以产生你听得到的声音。</li>
+	<li>人可以听到的震动的速度在一秒钟震动20次到20000次之间（实际上每秒震动80次我个人倒还不怎么听得见），如果那么快的震动你还看得清，好吧，算你强。</li>
+	<li>C4（中音的哆）频率为261Hz，即每秒震动261次。震动越快音越高。</li>
+</ul>
+好了，先看一下PCM8和PCM16的相同和不同。
+<ul>
+	<li>【同】两者都是使用若干字节来一一对应地保存震动信息的。（废话！）</li>
+	<li>【异】每一步震动位置使用字节数不同：PCM8里用1字节，PCM16用2字节。（单声道）</li>
+	<li>所以PCM16可以存储清晰度比PCM8更高的音频（废话！震动位置精确度上去了，音频肯定可以更清晰啊！）</li>
+</ul>
+<div>接下来在你生成音频的时候就要用这种代码了</div>
+<pre lang="java">/* from laobubu.net */
+var sampleo = []; //震动的数据
+var samples = []; //upsample后的数据
+var seconds=1; //一秒
+var samples_length = 44100*seconds; //震动的数据的长度（和时间有关）
+for (var i=0; i<samples_length; i++) {
+	var t = i/44100/scalet; // t=秒数（sec.）
+	sampleo[i] = Math.round(32767*sin(t*440)); //填写震动的数据。PCM16每一步震动位置范围是-32767到32767，而且是整数！
+	samples[i*2+1] =((sampleo[i] >> 8) & 0xFF); //将这一步震动的数据从整数转换为byte
+	samples[i*2] = (sampleo[i] & 0xFF);
+}
+var wave = new RIFFWAVE();//开始创建WAV
+var audio = new Audio(); //准备播放器
+wave.header.sampleRate = 44100; // 支持的最高震动频率，一般都是44100hz
+wave.header.numChannels = 1;// 单声道
+wave.header.bitsPerSample = 16;// PCM8→PCM16
+wave.Make(samples); //创建wav
+audio.src=wave.dataURI;
+audio.play(); //播放
+/* end */</pre>
+</blockquote>
+<h3>失败记录</h3>
+<blockquote>我打了一个没有准备的战。后来测试才发现移动设备不支持base64来表示音频数据！擦！</blockquote>
+<h3>题后话</h3>
+<blockquote>
+<ul>
+	<li>实际上这个app是为纳某的某某行为搞的。</li>
+	<li>感谢<a href="http://blog.cnbang.net/" target="_blank">@bang590（推特中文圈作者）博客</a>的信息了。</li>
+	<li>失败的成功，哎。</li>
+</ul>
+</blockquote>

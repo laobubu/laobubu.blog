@@ -1,0 +1,130 @@
+---
+layout: post
+title: "破解S60记以及18个好软件"
+date: 2011-4-29 16:26:51
+permalink: /515
+categories: ["互联网资源","日志","自己动手教程"]
+tags: []
+published: true
+---
+<img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/Mobile.png" alt="" align="right" />N周前的一个周末，我终于可以开始使用智能机了。恩，诺基亚C5-00，搭载S60v3FP2系统。不过和大多数刚开始使用智能机的网友一样，我遭遇了有关软件证书的问题。<br><br>sis(x)格式是S60系统的应用程序包的格式，其中包含的就是应用程序。在使用智能机之前我只有用java软件的份，似乎Java软件是通过在jad文档里写那些证书验证数据来解决问题的，一个带签名的Java软件往往都会带着个2-5K不等的jad文档。S60更加恶心，一个软件如果没有签名就不能安装，因此破解之很必要。<br><br><!--more-->
+<h3>开始破解</h3>
+<blockquote>网络上较多的说法就是使用HelloOX一键破解，但是根据我的测试，我悲催地失败了，从1.x到2.x都不能，一直卡在根证书安装，最后等不住了按下取消，打开文件管理器看看，靠，A-Z盘全部盘符排了一屏幕！<br><br>后来还有一个解决方法就是使用CertHack来进行破解，很轻松的说，前提是你已经得到了你的个人证书。（个人证书也是开发者证书，是给搞软件开发的人测试使用的。不过你可以去搜索一下，现在很多论坛都有人在制作证书。我的是 zntx.cc 上面制作的）<br><br>以下就是破解过程
+<ol>
+	<li>搞到一个个人证书</li>
+	<li>下载破解程序工具包（点击下载：<a href="http://datastorage.laobubu.net/softwares/CertHack.zip﻿">第一部分</a>和<a href="http://datastorage.laobubu.net/softwares/CrackPack_part2.zip">第二部分</a>）</li>
+	<li>安装第一部分的CertUpdater和第二部分的自由签名</li>
+	<li>解压缩第一部分的CertHack、LeftUp.zip和第二部分的HelloOX</li>
+	<li>启动自由签名，导入你的个人证书及其key，把CertHack签名（非自签名模式）</li>
+	<li>安装CertHack，然后再覆盖安装一次</li>
+	<li>重新开机</li>
+	<li>启动自由签名，导入LeftUp.zip里面的证书及其key，签名HelloOX</li>
+	<li><strong>调整手机时间为2009年四月份</strong></li>
+	<li>运行HelloOX，注意运行时候不要让背光熄灭了</li>
+	<li>在已安装程序里出现“深度破解”，点亮InstallServer就可以免签名安装软件了</li>
+</ol>
+</blockquote>
+<h3>我下载的软件</h3>
+<blockquote>现在iPhone用户可能有些纯粹是追风流。一部智能机需要的是软件使之价值得到体现。以下是我收集的软件中的18个，希望大家有用。
+<table>
+<tbody>
+<tr>
+<th>软件名称</th>
+<th>备注要求</th>
+<th>功能介绍</th>
+</tr>
+<tr>
+<td>CorePlayer</td>
+<td></td>
+<td>强大的播放器，可以用来播放flv、avi等S60自身不支持的格式。</td>
+</tr>
+<tr>
+<td>GifTailor</td>
+<td></td>
+<td>GIF图片合成分解，还可以进行屏幕录像。</td>
+</tr>
+<tr>
+<td>Java破解工具</td>
+<td>需py</td>
+<td>破解java游戏、改java名和屏幕大小等。</td>
+</tr>
+<tr>
+<td>MP3Editor</td>
+<td>需py</td>
+<td>MP3文件的裁剪、合并以及ID3标签编辑。这个来自俄国的软件很给力。</td>
+</tr>
+<tr>
+<td>Net60</td>
+<td>exe存C盘</td>
+<td>可以运行少数基于NET框架的WM手机exe软件</td>
+</tr>
+<tr>
+<td>Nokia PIPS Updater</td>
+<td>【必装】</td>
+<td>诺基亚推出的补丁，具体不太清楚，不过很多软件需要</td>
+</tr>
+<tr>
+<td>PAMP</td>
+<td>未测试</td>
+<td>诺基亚开发者论坛推荐！用于手机的Apache服务器程序，支持php、mySQL等</td>
+</tr>
+<tr>
+<td>Ped[PY]</td>
+<td>需py</td>
+<td>在手机上编写和运行python软件</td>
+</tr>
+<tr>
+<td>PlanTask</td>
+<td></td>
+<td>[计划任务]定时情景模式、关机、打开或退出软件等等</td>
+</tr>
+<tr>
+<td>Python1.x</td>
+<td>【必装】</td>
+<td>[至少个人证书签名]很多小软件都需要它支持，已经集合网友增强模块。</td>
+</tr>
+<tr>
+<td>SmartSIS</td>
+<td>需py</td>
+<td>用来打包解包sis文件，还可以转py脚本为sis软件。</td>
+</tr>
+<tr>
+<td>UC浏览器</td>
+<td></td>
+<td>这个不必说了吧。</td>
+</tr>
+<tr>
+<td>vBag</td>
+<td></td>
+<td>模拟GBA游戏。</td>
+</tr>
+<tr>
+<td>VideoEditor</td>
+<td>InstallServer</td>
+<td>视频编辑器，可以给视频配音、制作幻灯片视频、视频合并等等，提供多个转场特效和图像效果</td>
+</tr>
+<tr>
+<td>X-PLORE</td>
+<td></td>
+<td>很酷的文件管理器，同时支持rar文件解压缩</td>
+</tr>
+<tr>
+<td>全景相机</td>
+<td></td>
+<td>顾名思义。</td>
+</tr>
+<tr>
+<td>八门神器</td>
+<td>InstallServer</td>
+<td>类似金山游侠。</td>
+</tr>
+<tr>
+<td>拍照无声补丁</td>
+<td></td>
+<td>安装后将情景模式警告音关闭就可以消灭快门声了</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<blockquote>hoho，21MB的zip压缩包，enjoy吧.</blockquote>
+<blockquote><a href="http://datastorage.laobubu.net/softwares/S60%20Softwares.zip">http://datastorage.laobubu.net/softwares/S60%20Softwares.zip</a></blockquote>

@@ -1,0 +1,82 @@
+---
+layout: post
+title: "快速AJAX入门[HTML篇]"
+date: 2010-6-28 16:0:32
+permalink: /212
+categories: ["代码笔记和片段"]
+tags: ["ajax","html","js"]
+published: true
+---
+<img src="http://i671.photobucket.com/albums/vv73/laobubu/Icons%20for%20websites/code.png" alt="" align="right" />AJAX（Asynchronous JavaScript and XML，异步JavaScript和XML）现在已经进入了各种各样的web2.0网站。它的最大特色就是在不重新加载整个页面的情况下完成对局部内容的改变（想想我们的微博吧）。<br><br>之前和@<a href="http://1a23.com">blueset</a>聊天时候提到了使用AJAX动态显示新数据。本文是比较基础的入门指导，目标如下：
+<ul>
+	<li>显示服务器传来的文字数据</li>
+	<li>解析服务器传来的XML</li>
+	<li>间隔一段时间自动更新数据</li>
+</ul>
+欲知如何编写，请看全文……<!--more-->
+<h3>Hello, AJAX</h3>
+<blockquote>现在准备好享受Ajax了吗？首先创建一个文本文件ajax_data.txt并写入如下内容<br><br>[xml]<br><br>Hello, AJAX.<br><br>[/xml]<br><br>在这个文件里面我们写入了一句话，然后再创建一个HTML文档，内容如下<br><br>[html]<br><br>&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=gb2312"&gt;
+&lt;title&gt;AJAX Hello&lt;/title&gt;
+&lt;/head&gt;<br><br>&lt;body&gt;
+&lt;div id="output"&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;<br><br>[/html]<br><br>接下来写代码。在<strong>&lt;/div&gt;后面</strong>插入这些代码（不要忘记了用&lt;script&gt;这个东西包围）：<br><br>[java]<br><br>var xmlTopNotice<br><br>function updateNotice(){
+xmlTopNotice=GetXmlHttpObject();
+if (xmlTopNotice==null){
+//alert ("你的浏览器不支持AJAX!");
+return;
+}
+var url="ajax_data.txt";
+xmlTopNotice.onreadystatechange=stateChanged_Top;
+xmlTopNotice.open("GET",url,true);
+xmlTopNotice.send(null);
+}<br><br>function stateChanged_Top(){
+if (xmlTopNotice.readyState==4){ //已经加载了
+document.getElementById("output").innerHTML==xmlTopNotice.responseText;
+}
+}<br><br>function GetXmlHttpObject(){
+var xmlTopNotice=null;
+try {
+// Firefox, Opera 8.0+, Safari, Chrome...
+xmlTopNotice=new XMLHttpRequest();
+} catch (e) {
+// Internet Explorer
+try {
+xmlTopNotice=new ActiveXObject("Msxml2.XMLHTTP");
+} catch (e)	{
+xmlTopNotice=new ActiveXObject("Microsoft.XMLHTTP");
+}
+}
+return xmlTopNotice;
+}<br><br>updateNotice(); //调用这个东西就可以更新了<br><br>[/java]<br><br>打开该html文件，一会儿就可以看见屏幕上出现了“Hello, AJAX.”</blockquote>
+.
+<h3>用XML传递信息</h3>
+<blockquote>单纯的文字数据不好搞定，那么为什么不试试XML呢？XML很直观，而且在下面程序中的XML DOM有超简易的获取某项内容的方法。<br><br>这次写一个XML文件：ajax1.xml<br><br>[xml]<br><br>&lt;?xml version="1.0" encoding="GB2312"?&gt;
+&lt;xml&gt;
+&lt;info id="msg1"&gt;你好,AJAX&lt;/info&gt;
+&lt;info id="msg2"&gt;Hello,AJAX&lt;/info&gt;
+&lt;/xml&gt;<br><br>[/xml]
+<blockquote><strong><span style="color: #800000; font-size: 16px;">【重要知识】MIME必须是XML特有的！</span></strong><br><br>大家应该都知道，每种文件都有不同的MIME类型（Content-Type）。其中XML的就是text/xml。一般服务器都会根据扩展名自动把预置的文件类型发送到访客那里。<br><br>有意思的是XML DOM解析我遇到了这种情况：我直接把上文的xml数据保存为php文件拿去解析，结果解析失败。原因是<strong>php默认MIME不会无聊到和XML一样，然而本文AJAX解析XML必须有正确的MIMIE。</strong><br><br>很无语对吧。所以以后如果要使用php来冒充xml，在代码顶部必须有这么一句话：<br><br>&lt;?php <span style="color: #000080;">header</span>(<span style="color: #008000;">"Content-Type: text/xml"</span>); ?&gt;<br><br>除此之外，由于 &lt;?xml 可能会被误解析为php代码，所以该php文件第一行应该像这样代替：<br><br>&lt;?php <span style="color: #000080;">echo</span> '<span style="color: #008000;">&lt;?xml version="1.0" encoding="GB2312"?&gt;&lt;notice&gt;</span>'; ?&gt;</blockquote>
+这次我们的目的是获取ID为msg1的那个项（&lt;item&gt;）的内容。<br><br>找到之前【document.getElementById("output").innerHTML=....;】这行代码，删除，然后用以下代码替换之：<br><br>[java]<br><br>var xmlDoc=xmlTopNotice.responseXML; //把它解析成一个XML DOM
+document.getElementById("output").innerHTML=xmlDoc.getElementsById("msg1").childNodes[0].nodeValue;<br><br>[/java]
+<blockquote><strong><span style="color: #800000; font-size: 16px;">【重要知识】nodeValue前面为什么还要一个childNodes[0]？</span></strong><br><br>现在无论是AJAX还是Flash里面的XMLNode对象，除了类似id之类直接被包在&lt;和&gt;之间的东西，其他都是节点，只是类型不同而已。<br><br>例如这个xml内容片段：<br><br>[xml]<br><br>&lt;item name="words"&gt;ABC&lt;/item&gt;<br><br>[/xml]<br><br>上面的name="words"不属于节点类，而是属性类。
+然而ABC是一种节点，不过这种节点比较特别——仅是一串文字而已。<br><br>属性可用.getAttribute("name")获得。
+文字节点可用.nodeValue获得。</blockquote>
+然后测试结果是显示“你好, AJAX”！<br><br>另外，除了使用<span style="color: #000080;">getElementById</span>获取节点，getElementsByTagName也可以用于获取节点。
+例如【.getElementsByTagName("info")】可以获取全部以【&lt;info】开头的节点的数组。前面使用的【getElementsById("msg1")】完全可以修改为【getElementsByTagName("info")[0]】<br><br><img src="http://i671.photobucket.com/albums/vv73/laobubu/pics%20for%20blog/XML_AJAX.png"></blockquote>
+.
+<h3>自动间隔一段时间查询</h3>
+<blockquote>这个超级好搞定的！例如前面的代码片段
+[java]<br><br>function stateChanged_Top(){
+if (xmlTopNotice.readyState==4){ //已经加载了
+document.getElementById("output").innerHTML==xmlTopNotice.responseText;
+}
+}<br><br>[/java]<br><br>你只要在倒数第二个右大括号之前插入一段代码，让电脑过xxx毫秒之后再次运行AJAX（呼叫之前定义的<span style="color: #000080;">updateNotice</span>();这个东西）即可
+[java]<br><br>function stateChanged_Top(){
+if (xmlTopNotice.readyState==4){ //已经加载了
+document.getElementById("output").innerHTML==xmlTopNotice.responseText;
+setTimeout('updateNotice();',1000);
+}
+}<br><br>[/java]</blockquote>

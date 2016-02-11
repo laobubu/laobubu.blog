@@ -1,0 +1,30 @@
+---
+layout: post
+title: "使用htaccess为一个绑定的域名设置文件夹"
+date: 2010-10-23 13:18:30
+permalink: /426
+categories: ["代码笔记和片段","程序和代码","网站维护"]
+tags: ["FastTwitter","htaccess","html","域名"]
+published: true
+---
+<img src="http://www.apache.org/images/feather.gif" alt="" width="174" height="53" align="right" />各种虚拟主机，不论是使用啥控制面板，应该都会有“绑定域名”或者“附加站点”这类功能吧。使用这类功能我们可以让用户以不同的域名访问自己的站点，这很不错，不过问题就是：你怎么指定一个域名对应的文件夹呢？虽然“附加站点”这种功能会给你创建一个对应新域名的文件夹，但是这文件夹一般你改不了，多没有个性啊……<br><br>如果你用的是<a href="http://www.apache.org/">Apache</a>服务器程序（恩，就是那个标志为一根鸡毛的东东），可以使用htaccess来进行重写操作，模仿主机控制面板那种多站点的效果。<br><br>注意不是<a href="http://blog.laobubu.net/11">重定向</a>。<!--more-->
+<h3>1、先绑定你的域名</h3>
+<blockquote>还记得你当时是怎么搞定你的域名的么？<a href="http://blog.laobubu.net/8">本站#8日志有讲过</a>。你只要把那个新域名绑定到你站点上即可（注意是绑到你的主站上，不要为它新建一个站点）。试试访问，哦，正常了，继续。</blockquote>
+<h3>2、准备好你的新子站点的文件</h3>
+<blockquote>现在可以在你的站点下面创建一个文件夹来放新站点了。<br><br>创建一个文件夹(名字：例如ABC)... 上传文件...<br><br>现在试试访问【新网址/ABC】，是不是可以访问了。如果可以访问了，那么继续。</blockquote>
+<h3>3、编写并上传.htaccess文件</h3>
+<blockquote>最重要的事情开始了。在自己电脑上先创建一个文件，名字就是【.htaccess】*<br><br>*如果你在Windows下不能创建，可以先用【1.htaccess】代替，上传到服务器后改名
+*如果主站点根文件夹上已经有这个文件了，拷贝下来覆盖之！<span style="color: #ff0000;"><strong>很重要</strong></span><br><br>然后用文本文件编辑器打开之。在里面插入这堆东西：
+<div id="_mcePaste">RewriteEngine On</div>
+<div id="_mcePaste">RewriteBase /</div>
+<div id="_mcePaste">RewriteCond %{HTTP_HOST} ^<span style="color: #0000ff;"><strong>(</strong></span><span style="color: #0000ff;"><strong><span style="color: #0000ff;">www.</span></strong></span><span style="color: #0000ff;"><strong>)</strong></span>?<span style="color: #008000;"><strong>不带www的域名</strong></span>$</div>
+<div id="_mcePaste">RewriteRule .* <strong><span style="color: #008000;">你创建的文件夹的名字</span></strong>/$0 [PT,L]</div>
+保存，上传，完毕。</blockquote>
+至此，你已经搞定了这个问题。<br><br>我为了<a href="//ft.laobubu.net">FastTweet</a>也进行了这些操作。现在<a href="http://ftapi.tk/">ftapi.tk</a> ==<a href="http://ft.laobubu.net/api"> ft.laobubu.net/api</a><br><br>本文结束……<br><br>……除了一些补充的信息：
+<ol>
+	<li>Ｑ：那个蓝色的(www.)是啥意思？
+Ａ：表示www.可有可无的，如果你想玩泛域名（就是各种子域名）的话，可以修改为(.*)</li>
+	<li>Ｑ：出现500错误了？
+Ａ：可能是<span style="color: #008000;"><span style="text-decoration: underline;">RewriteEngine On</span></span>这一句导致的，删除之
+也可能是服务器没有Rewrite模块（mod_rewrite），这事情你应该得和主机商反应！</li>
+</ol>

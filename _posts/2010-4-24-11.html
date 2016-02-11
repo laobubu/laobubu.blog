@@ -1,0 +1,38 @@
+---
+layout: post
+title: "网页网站重定向的4种方法"
+date: 2010-4-24 15:31:52
+permalink: /11
+categories: ["代码笔记和片段"]
+tags: ["htaccess","html","js","php"]
+published: true
+---
+重定向是一个很有用的东西，例如你的网站地址改变了，用重定向把访客拉到新地址……特方便的！本文主要介绍几种比较常用的方法。
+<!--more-->
+<h3>方式1：直接编辑.htaccess</h3>
+这种方法适用于<a href="http://httpd.apache.org/" target="_blank">Apache服务器</a>，htaccess是我认为很强大的东西之一，尽管我到现在还不会写。YOURLS缩址使用的就是htaccess，还有著名的WordPress也是使用了htaccess实现许多东西。<br><br>以下就是使用htaccess文件重定向的方法。<strong>注意：在设置301重定向之前务必备份相应目录下的.htaccess文件。</strong>
+<h4>1.重定向domain.com到www.domain.com</h4>
+<blockquote>RewriteEngine On<br><br>RewriteCond %{HTTP_HOST} !^www.domain.com$ [NC]<br><br>RewriteRule ^(.*)$ http://www.domain.com/$1 [L,R=301]</blockquote>
+<strong>2.重定向www.domain.com到domain.com</strong>
+<blockquote>RewriteEngine On<br><br>RewriteCond %{HTTP_HOST} !^domain.com$ [NC]<br><br>RewriteRule ^(.*)$ http://domain.com/$1 [L,R=301]</blockquote>
+<strong>3.重定向olddomain.com到www.newdomain.com</strong>
+<blockquote>RewriteEngine On<br><br>RewriteCond %{HTTP_HOST} !olddomain.com$ [NC]<br><br>RewriteRule ^(.*)$ http://www.newdomain.com/$1 [L,R=301]</blockquote>
+<h4>4.重定向olddomain.com to newdomain.com</h4>
+<blockquote>RewriteEngine On<br><br>RewriteBase /<br><br>RewriteCond %{HTTP_HOST} !olddomain.com$ [NC]<br><br>RewriteRule ^(.*)$ http://newdomain.com/$1 [L,R=301]</blockquote>
+<h4>5.重定向domain.com/file/file.php 到 otherdomain.com/otherfile/other.php</h4>
+<blockquote>RewriteCond %{HTTP_HOST} ^www.domain.com$<br><br>RewriteRule ^file/file.php$ http://www.otherdomain.com/otherfile/other.php [R=301,L]</blockquote>
+来自<a href="http://www.bluehost-cn.com/bluehost-domain-redirects">http://www.bluehost-cn.com/bluehost-domain-redirects</a>
+<h3>方式2：在php页里面的跳转</h3>
+php里面使用重定向也不错，但是和htaccess相比就有点差了。适用于页面被移动。<br><br>在php页面头部写上如下代码即可！
+<blockquote>&lt;?php header("Location: <span style="color: #800000;">http://laobubu.tk</span>"); ?&gt;</blockquote>
+（注意：里面的http://laobubu.tk可以用相对路径，例如/newpath/）
+<h3>方式3：使用JS进行跳转</h3>
+做网页我们常常都要和JS打交道，如果好好使用，它的功能之强大可使人佩服。不过问题就是有些浏览器不支持，或者用户干脆禁止了JS！那时候就不好玩了。<br><br>这个是比较常用的代码。
+<blockquote>&lt;script&gt;window.location ="http://laobubu.tk";&lt;/script&gt;</blockquote>
+还有就是之前在<a title="防御邮箱间谍" href="https://www.kenengba.com/post/2872.html" target="_blank">可能吧某篇博文里</a>发现的一个代码，没有测试，不过理论可行。
+<blockquote>&lt;script&gt;window<span style="color: #993300;">.parent</span>.location ="http://laobubu.tk";&lt;/script&gt;</blockquote>
+据说这个代码在浏览器标题栏里面还会保留原地址，是黑客的喜爱之物。
+<h3>方式4：使用META标签</h3>
+随便插入到HTML页面里面就可以了，特方便，问题是会显示当前页面一阵子（做提示不错）……
+<blockquote>&lt;META HTTP-EQUIV="Refresh" CONTENT="<span style="color: #ff0000;">0</span>;URL=index.php"&gt;</blockquote>
+（上面代码里红色的0表示停留时间，情况自己掌握）<br><br>-<br><br>本文作者laobubu@gmail.com，转载务必注明！

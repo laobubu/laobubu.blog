@@ -1,63 +1,31 @@
 ---
 layout: post
-title:  "Welcome to Jekyll and EasyBook"
-date:   2014-12-30 09:00:13
-categories: jekyll update
+title:  "博客来到 Jekyll 了"
+date:   2014-12-31 01:10:47
+categories: 
 permalink: /archivers/hello
+excerpt_separator: <!--more-->
 ---
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+好吧，正如你所见，我的老博客的东西都被糊到这里丢着了。数据还在同步，等过后完全同步结束就可以正式上线了。
 
-To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+博客将挂在 GitHub 上，因此文本什么的都会是开源的。
 
-GitHub Flavored Markdown is supported.
+主题是自己基于 Jekyll 修改的，此外也对 Jekyll 做了简单的修改，譬如
 
-```ruby
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
-```
+<!--more-->
 
-## EasyBook Advanced Functions ##
+* 支持 GFM 标记语言特色（比如代码块、删除线之类的）
+* 增加翻页
+* 将英文修改为中文
+* 将页面底部的社交网络图标进行重排
+* 添加留言板功能
+ * 在 `_includes/comment.html` 文件里面修改评论插件
+ * 如果要关闭评论，在文章头部加上 `nocomments: true` 即可
+* ……
 
-You are using [EasyBook][github-easybook] the template from [laobubu.net](http://laobubu.net). Therefore some features are supported now:
+如果要快速搭建一个的话，可以 clone 我的模板Repo，具体见： https://github.com/laobubu/jekyll-theme-EasyBook
 
-* **Pagination** is enabled.
-* **Disqus** or **多说** is ready.
-* **TOC** for posts is enabled.
-* **Profile** including your links and avatar on the sidebar.
-* *And more...*
+还有就是从 WordPress 导入数据，我用的是自己编写的一个 NodeJS 程序，可以在这里拿到代码： https://gist.github.com/laobubu/d48aeb6d35913ccf1fce
 
-> **Tips:** You can disable Disqus or 多说 on posts/pages by adding `nocomments: true` into [YAML Front Matter][frontmatter].
-
-EasyBook uses upaiyun CDN to make everyone lncluding Chinese visitors feel speedy. You can find it in `_includes/footer.html` and change it to your favorite CDN like Google CDN.
-
-## Support me by... ##
-
-### Add a link ###
-
-EasyBook does not make the footer heavy; the link to theme could be on `about.md`:
-
-> This website is using [laobubu](http://laobubu.net)'s theme: [EasyBook](https://github.com/laobubu/jekyll-theme-EasyBook)
-
-### Donate (PayPal or 支付宝) ###
-
-That's the best :smile: 
-
-Please visit [http://laobubu.net/donate.html](http://laobubu.net/donate.html)
-
-### Star and Fork on GitHub (free) ###
-
-Not going to donate? That's okay. You can also send out your precious star [on GitHub][github-easybook].
-
-## And Here We Go ##
-
-Check out the [Jekyll docs][jekyll] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll’s dedicated Help repository][jekyll-help].
-
-[jekyll]:      http://jekyllrb.com
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-help]: https://github.com/jekyll/jekyll-help
-[frontmatter]: http://jekyllrb.com/docs/frontmatter/
-[github-easybook]: https://github.com/laobubu/jekyll-theme-EasyBook
+天色已晚，该睡觉了。晚安。下周还有考试呢。

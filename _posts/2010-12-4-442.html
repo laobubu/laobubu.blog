@@ -1,0 +1,75 @@
+---
+layout: post
+title: "Google Storage的域名绑定及用php读写数据"
+date: 2010-12-4 14:34:15
+permalink: /442
+categories: ["代码笔记和片段","自己动手教程"]
+tags: ["Google","php","云","免费空间","网盘"]
+published: true
+---
+<img src="http://www.google.com/images/logos/code_labs_logo.gif" alt="" align="right" /><a href="http://code.google.com/intl/zh-CN/apis/storage/">Google Storage</a>是Google Lab里面的一个东东，为大家提供云存储服务。你存放在上面的东西都会丢到他们的云服务器上存着。以下是他们的介绍：
+<blockquote>Google Storage（for 开发者）是一个用于存储和访问数据的服务。 这项服务结合了谷歌“云”的先进、安全、共享和可伸缩性。 特点包括：<br><br><strong>快速，可扩展，高度可用的对象存储</strong>
+<ul>
+	<li>数据保存在美国各地</li>
+	<li>读写一致</li>
+	<li>支持数百G的数据请求</li>
+	<li>域名和桶（类似虚拟磁盘之意）的结合</li>
+</ul>
+</blockquote>
+今天中午，我终于搞定了第四点，并拥有了属于自己的一个“云”数据存储域名 <a href="http://datastorage.laobubu.net">datastorage.laobubu.net</a>
+<!--more-->
+<h3>先搞定域名所有权问题</h3>
+<blockquote>要让自己的某个域名变成云存储用，你得先让google知道这个域名是你的。<br><br>先把这个域名绑定到一个空间上，比如你的虚拟主机里面，待会儿要用来保存验证用的HTML文件。<br><br>然后，访问 <a href="https://www.google.com/webmasters/tools/home">https://www.google.com/webmasters/tools/home</a> 并添加那个域名，你会见到“验证所有权”的页面，选择“<strong>将 HTML 文件上传到您的服务器</strong>”这种验证方法，下载验证用的那个html文件。下载好后别关那个页面。<br><br>把那个html文件上传到你之前绑定的空间里面，试试看可否访问，如果可以用类似 <em>http://你的云存储网址/google_______.htm</em> 这种地址访问了，那么回到验证所有权页面，点击“验证”，通过就OK。</blockquote>
+<h3>去创建一个桶</h3>
+<blockquote>访问 <a href="https://sandbox.google.com/storage/#">https://sandbox.google.com/storage/</a> 并创建一个桶，名字就是你的云存储的地址，比如 <em>datastorage.laobubu.net</em></blockquote>
+<h3>设置DNS</h3>
+<blockquote>最后就是为域名设置DNS了。
+<ul>
+	<li>如果你可以管理DNS记录，那么进入管理页。</li>
+	<li>如果没有的话去申请一个免费DNS服务（推荐 <a href="http://dns.he.net">dns.he.net</a>，鄙视DNSPod），然后修改域名的DNS为那个DNS服务提供的地址（如 ns1.he.net 、 ns2.he.net等）。</li>
+</ul>
+在管理页上添加一个新的CNAME记录，记录的名字就是你的地址（例子前面有），数据就是 c.commondatastorage.googleapis.com<br><br>比如我的就是添加了一个这种DNS记录：
+<pre id="aeaoofnhgocdbnbeljkmbjdmhbcokfdb-mousedown">datastorage.laobubu.net.	CNAME	c.commondatastorage.googleapis.com.</pre>
+</blockquote>
+<h3>结束</h3>
+<blockquote>进入你的那个桶的文件管理页面（在<a href="https://sandbox.google.com/storage/#">https://sandbox.google.com/storage/</a>里），把第一步中的验证用html文件上传进去，上传完成后将右侧那个灰色的钩钩点成绿的。<br><br>这么做是因为google不知道会在什么时候再来自动玩一次域名所有权验证，如果他验证的时候不能读取到那个验证用html，后果……恐怕不会好。</blockquote>
+至此，绑定活动结束了。<br><br>.<br><br>.<br><br>…
+<h3>用php读写数据</h3>
+<blockquote>这个我们恐怕没有那么大的闲情去看大篇大篇的鸟语编程说明，我们需要的是一个方便的途径来完成那些操作。<br><br>首先，要有一个读写的令牌，这个好搞，去这个地方拿：
+<a href="https://sandbox.google.com/storage/m/">https://sandbox.google.com/storage/m/</a><br><br>然后我们还需要现成的代码处理那些网络操作……<br><br>万能的twitter上有一个好东西：
+<a href="https://github.com/dragonmantank/tws_service_google_storage/blob/master/Tws/Service/Google/Storage.php">https://github.com/dragonmantank/tws_service_google_storage/blob/master/Tws/Service/Google/Storage.php</a><br><br>这是一个php源代码，包含一个叫做Tws_Service_Google_Storage的类。通过它就可以玩数据了。<br><br>下载下来Storage.php，新建一个php文件，两者放一起。
+在新建的文件里面写代码……
+<pre lang="php">&lt;?php
+include('Storage.php');
+$b = new Tws_Service_Google_Storage('你的令牌','你的令牌密匙');
+//接下来的话可以开始玩了
+?> </pre>
+玩法很多了，比如下面这些简单玩法：
+<blockquote><strong>上传文件到一个桶中</strong>
+$b-&gt;putFile('文件路径','桶名字/上传后的文件名');<br><br>[备注]默认上传后你还得去google的后台勾上那个灰色的小钩钩，其他人才可以方便地用网址获取文件。你可以这样搞定这个问题：
+<pre lang="php">
+$b->putFile('文件路径','桶名字/上传后的文件名',
+array('acl'=>Tws_Service_Google_Storage::ACL_PUBLIC_READ)
+);
+</pre>
+</blockquote>
+<blockquote><strong>获取桶名字列表</strong>
+<pre lang="php">$l = $b-&gt;getBuckets();
+foreach ($l as $item=>$detail) {
+echo $item;
+echo '<br>';
+}</pre>
+</blockquote>
+<blockquote><strong>获取桶内物件列表</strong>
+<pre lang="php">$l = $b->getObjectsByBucket('桶的名字');
+foreach ($l as $item=>$detail) {
+echo $item;
+echo '<br>';
+}</pre>
+</blockquote>
+<blockquote><strong>删除东西</strong>
+<pre lang="php">
+$l = $b->removeObject('桶名字/文件名');
+</pre>
+</blockquote>
+</blockquote>

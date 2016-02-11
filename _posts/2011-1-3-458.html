@@ -1,0 +1,34 @@
+---
+layout: post
+title: "非中国DNS上gougou.com以及用cURL玩离线下载"
+date: 2011-1-3 9:37:34
+permalink: /458
+categories: ["日志","程序实验室"]
+tags: ["cURL","php","下载","外交","瓷器"]
+published: true
+---
+本文就两件事情：①非中国DNS上gougou.com②用cURL玩离线下载<br><br>如果你那里没这等问题，那么就54（无视）这篇文章吧。<!--more-->
+<h3>非中国DNS上gougou.com</h3>
+不知道是不是真的要保护知识产权，现在如果你直接访问gougou.com结果就是“非大中华地区”不能访问。至少我这里是这个样子。<br><br>截图我就不提供了，以下就是提示信息节选：
+<blockquote>尊敬的用户：
+为了配合和保护相关的内容版权，非大中华用户可能会无法使用我们相关的服务，我们对由此给您造成的麻烦深表歉意。如果您是中国内地，台湾，香港或者澳门的用户，请您在本页面的底部填写相关内容，提交给我们，我们将尽快处理解决您的问题，并为您继续提供服务。
+感谢您对狗狗的支持。</blockquote>
+没话说了。<br><br>最后他们要求我们修改DNS。原来是我们使用的是外国DNS服务，得到的IP地址是错误的。<br><br>最简单的解决方法：修改hosts文件<br><br>打开hosts文件和 ip.cn (或者ip138.com也可以)<br><br>使用ip.cn或ip138.com的解析服务，逐个得到以下地址的正确IP
+<blockquote>gougou.com
+www.gougou.com
+movie.gougou.com
+down.gougou.com
+static.gougou.com
+static.down.gougou.com
+img.gougou.com
+soft.gougou.com
+mp3.gougou.com
+shouji.gougou.com
+book.gougou.com
+video.gougou.com
+hd.gougou.com</blockquote>
+写入hosts，完毕。
+<h3>cURL玩离线下载</h3>
+因为运营商限制和防火墙的缘故，国内下载外国东西速度会大打折扣。而我们的虚拟主机（不管国内国外）一般都有较大的带宽。 我们可以利用服务器先下载好东西搁着，过后自己下载下来。<br><br>twitter上有这么一条推
+<blockquote>RT @<a rel="nofollow" href="http://twitter.com/mcxiaoke">mcxiaoke</a>: 我发现GoDaddy空间的一个新用途，连上SSH后，用wget或curl下载东西（下载速度飞快，而且没有流量限制），保存在自己的空间里，再从自己的空间下载下来 ----&gt; 这相当于迅雷的离线下载了</blockquote>
+如果你可以玩命令行，那么可以参照<a href="http://www.21andy.com/blog/20080602/1154.html">http://www.21andy.com/blog/20080602/1154.html</a>这篇文章介绍的使用curl下载东西。<br><br>不过我倒是不行，而且服务器也不给SSH（不给力啊）……不过现在可以试试看这个 laobubu's CURL Downloader<br><br>源代码: <a href="http://datastorage.laobubu.net/php/lcd.php">datastorage.laobubu.net/php/lcd.php</a><br><br><a href="http://blog.laobubu.net/wp-content/uploads/2011/01/LCD.jpg"><img class="alignnone size-full wp-image-459" title="LCD" src="http://blog.laobubu.net/wp-content/uploads/2011/01/LCD.jpg" alt="" width="488" height="488" /></a>

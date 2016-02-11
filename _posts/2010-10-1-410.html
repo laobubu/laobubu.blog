@@ -1,0 +1,33 @@
+---
+layout: post
+title: "不通过代理直接访问Facebook"
+date: 2010-10-1 9:37:26
+permalink: /410
+categories: ["小笔记","自己动手教程"]
+tags: ["Facebook","Twitter","外交","瓷器"]
+published: true
+---
+<img src="http://blog.laobubu.net/wp-content/uploads/2010/10/facebook.jpg" alt="Facebook" align="right" /> 知道Facebook是什么吗？如果不知道的话，退一步说，知道校内网（现在叫做人人网）是什么吧？<br><br>Facebook是校内网所模仿的对象，它是一个全球化的社交平台。我们先来看看一个有意思的资料：
+<blockquote>
+<h3>世界最新人口排名</h3>
+1.中国；2.印度；<strong>3.Facebook</strong>；4.QQ； 5.美国；6.MySpace；7.印度尼西亚；8.巴西；9.Twitter ……
+<p style="text-align: right;">-- 数据来源：媒体。有待考证</p>
+</blockquote>
+但是现在在<a href="http://dict.baidu.com/s?wd=China&amp;f=3">瓷器国</a>，访问Facebook没有访问校内网那么方便。你在地址栏敲入 www.facebook.com 结果就是“该页无法显示”。无奈吧。不过这里我有一个很不错的方法，不借助代理工具即可完成访问。<br><br><!--more-->
+<h3>先找一个IP地址</h3>
+这个和不翻墙访问twitter差不多原理。我们需要一个Facebook的IP地址。因为Facebook用户太多，他们自然购买了一大堆的服务器。现在找一个寻IP的工具来完成操作。<br><br>你可以参考 <a href="http://blog.youtaba.tk/?p=14">http://blog.youtaba.tk/?p=14</a> 的寻找IP的方法找到 【facebook.com】的IP地址，然后作为URL访问一下试试(例子：<a href="https://69.63.189.16/">https://69.63.189.16/</a>)。如果可以访问，把那个IP记下来
+<h3>修改hosts文件</h3>
+找到例如 C:WINDOWSsystem32driversetc 这个文件夹，用记事本打开hosts文件。<br><br>如果你的操作系统高于XP，你需要先设定你的账号的权限，使其可以修改那个文件。<br><br>打开以后，在最底下写这几行文字
+<blockquote>69.63.189.16	s-static.ak.facebook.com
+69.63.189.16	www.facebook.com
+69.63.189.16	facebook.com
+69.63.189.16	ssl.facebook.com
+69.63.189.16	login.facebook.com
+69.63.189.16	apps.facebook.com</blockquote>
+然后保存。以后就可以通过 <a href="https://facebook.com/">https://facebook.com/</a> 进入Facebook。不过要注意下面提到的问题……
+<h3>由于安全证书，你需要搞定一些问题</h3>
+Facebook某些子域名没有搞安全证书，因此无法访问。在IE里，顶部会有一个条条，很轻松就可以解决。但是在Chrome里就杯具了……你至少需要先访问一下这个网址，点了上面的按钮，Facebook才可以正常显示：
+<blockquote><a href="https://s-static.ak.facebook.com/">https://s-static.ak.facebook.com/</a></blockquote>
+有点麻烦，但是可惜没有解决方法
+<h3>为了方便……</h3>
+Facebook有的链接不是https的，点进去就无法连接。你可以试试 <a href="https://chrome.google.com/extensions/detail/ojhooodaigdecejmedolemjnfcimplba">https://chrome.google.com/extensions/detail/ojhooodaigdecejmedolemjnfcimplba</a> 这个Chrome浏览器的扩展，自动变https，很好用的

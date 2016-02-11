@@ -1,0 +1,58 @@
+---
+layout: post
+title: "快速推web参考文档"
+date: 2010-4-24 23:42:0
+permalink: /14
+categories: ["帮助文档"]
+tags: ["FastTwitter"]
+published: true
+---
+<div style="height: 160px;"><img align="left" src="http://laobubu.tk/images/work/fastt.png" alt="" width="156" height="153" />快速推是一个用于手机的Java推特客户端。本文内容为快速推核心之服务器操作方法。
+2010年4月24日：当前本文档还没有用于已发布的快速推，仅仅是为快速推2.0制作的。
+如果你也想制作在线推特客户端，可以使用一下。</div>
+<!--more-->
+<h3>格式基础</h3>
+<blockquote>1、快速推的数据编码格式为UTF-16LE。<br><br>2、调用均采用GET方式且不遵守GET标准，使用的方法是 x.php?参数1?参数2?参数3?...（就是使用问号间隔参数）。<br><br>3、推的ID号码为36进制（[0-9][a-z]）。<br><br>4、每一个推间隔符为n，推里面的换行为r<br><br>5、每一个推都是这种格式：ID:Author:Message ，例如
+<blockquote>5v5q312:ChipmunkCN:看看3G门户我笑了http://bit.ly/dgzzyU</blockquote>
+……</blockquote>
+<h3>怎么用</h3>
+<blockquote>
+<h4>发布文字推</h4>
+发布文字推使用p.php，参数格式为
+<blockquote>MYID?PASSWORD?MESSAGE</blockquote>
+例如我要发布内容为“测试一下”的推，就使用
+<blockquote>http://laobubu.tk/ft/p.php?laobubu?不告诉你密码?测试一下</blockquote>
+</blockquote>
+<blockquote>
+<h4>看他人的推</h4>
+读推用u.php，参数格式为
+<blockquote>MYID?PASSWORD?THEUSER</blockquote>
+例如我要以laobubu的名义看ChipmunkCn最近的推，用
+<blockquote>http://laobubu.tk/ft/u.php?laobubu?不告诉你密码?ChipmunkCN</blockquote>
+</blockquote>
+<blockquote>
+<h4>搜索推</h4>
+搜索推使用f.php，参数格式为
+<blockquote>Page?KeyWord</blockquote>
+例如我要搜索关于“laobubu”的推，且只看第一页
+<blockquote><a href="http://laobubu.tk/ft/f.php?1?laobubu">http://laobubu.tk/ft/f.php?1?laobubu</a></blockquote>
+</blockquote>
+<blockquote>
+<h4>看我Follow的人的推（聚合）</h4>
+使用m.php，参数格式为
+<blockquote>MYID?PASSWORD?[Last]</blockquote>
+其中Last为可选参数，但是前面的问号不可省去！Last内容为上一个推的ID号（十进制）<br><br>例
+<blockquote>http://laobubu.tk/ft/m.php?laobubu?密码被隐藏?</blockquote>
+</blockquote>
+<blockquote>
+<h4>上传图片到img.ly</h4>
+使用i.php，注意这个使用的是POST方式，要求的项有
+<blockquote>a=推特用户名
+b=密码
+d=图片描述（可选，描述内容编码应该为UTF-8，会保存到img.ly上面）
+p=图片文件二进制</blockquote>
+如果不清楚，可以看看 <a href="http://laobubu.tk/ft/te.php">http://laobubu.tk/ft/te.php</a> 的源代码<br><br>发布后会得到图片ID，例如
+<blockquote>Zij</blockquote>
+意思是图片发到了
+<blockquote><a href="http://img.ly/Zij">http://img.ly/<span style="color: #800000;"><strong>Zij</strong></span></a></blockquote>
+</blockquote>

@@ -1,0 +1,27 @@
+---
+layout: post
+title: "Hosts Generator 输入域名列表生成 Hosts 文件"
+date: 2014-2-18 17:4:31
+permalink: /660
+categories: ["发布","我的程序"]
+tags: []
+published: true
+---
+好吧，于是我有必要在假期结束前搞一个啥东西表示这个假期做过什么东西。正巧遇到新机器的 DNS 被 GFW 污染得体无完肤，Flickr 各种无法显示图片，Hosts 文件又没有及时更新，所以写了个输入域名生成 Hosts 文件的小php程序。而且可以通过 POST 请求来生成 Hosts 文件（学校里的OpenWRT路由器有救了，wget 支持 POST）。
+<h2>程序和源代码</h2>
+<blockquote>立即进入：
+<a href="http://heroku.laobubu.net/hostsgenerate/">http://heroku.laobubu.net/hostsgenerate/</a><br><br>在线源码(GitHub)：
+<a href="https://github.com/laobubu/HostsGenerator">https://github.com/laobubu/HostsGenerator</a></blockquote>
+<!--more-->
+<h2>Features</h2>
+<ul>
+	<li>Load domains from Hosts file, HTML source codes and your plain text files.</li>
+	<li>Filter to avoid some lines like <code>127.0.0.1 localhost</code></li>
+	<li>Specify the address of some domains (to block ads?)</li>
+	<li>Choose your DNS server</li>
+	<li>TCP query</li>
+	<li>IPv6 (AAAA) query</li>
+	<li>Generate Hosts by posting data. (Really friendly to some cheap OpenWRT devices)</li>
+</ul>
+<h2>Something Else</h2>
+三天后滚回学校，以上。

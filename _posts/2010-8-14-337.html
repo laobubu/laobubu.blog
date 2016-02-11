@@ -1,0 +1,48 @@
+---
+layout: post
+title: "一个简易的Flash频谱显示代码"
+date: 2010-8-14 4:19:35
+permalink: /337
+categories: ["代码笔记和片段","程序实验室"]
+tags: ["AS3","Flash","音乐"]
+published: true
+---
+之前突然想到有些flash会显示音乐频谱，于是找了一个相对简单的代码，收藏之
+<h3>演示</h3>
+<object style="width: 512px; height: 400px;" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="512" height="400" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="play" value="false" /><param name="loop" value="false" /><param name="menu" value="false" /><param name="base" value="http://laobubu_first_try.commondatastorage.googleapis.com/Flash/WaveShow/" /><param name="src" value="http://laobubu_first_try.commondatastorage.googleapis.com/Flash/WaveShow/display.swf" /><embed style="width: 512px; height: 400px;" type="application/x-shockwave-flash" width="512" height="400" src="http://laobubu_first_try.commondatastorage.googleapis.com/Flash/WaveShow/display.swf" base="http://laobubu_first_try.commondatastorage.googleapis.com/Flash/WaveShow/" menu="false" loop="false" play="false"></embed></object><br><br><a href="http://laobubu_first_try.commondatastorage.googleapis.com/Flash/WaveShow/display.fla">点击这里下载源文件(不含音乐文件)</a><br><br><a href="http://laobubu_first_try.commondatastorage.googleapis.com/Flash/WaveShow/display.swf">点击这里直接打开swf</a>
+<!--more-->
+<h3>代码</h3>
+<blockquote>下为关键代码，直接粘贴进去flash第一帧也就OK了
+<blockquote><pre lang="java"><br><br>import flash.display.Graphics;
+import flash.display.Sprite;
+import flash.events.Event;
+import flash.media.Sound;
+import flash.media.SoundChannel;
+import flash.media.SoundMixer;
+import flash.net.URLRequest;<br><br>const WAVE_HEIGHT:int = 100; //由于flash给你的音频数据每一个都是-1到1之间的浮点数(小数)，因此只要乘上这个就可以搞出高度差
+const WAVE_Y1:int = 100;
+const WAVE_Y2:int = 300;
+const CHANNEL_LENGTH:int = 256;	//根据flash规定，给你的音频数据长度为512，其中前一半为左声道，另一半就是右声道了<br><br>var snd:Sound = new Sound();
+var req:URLRequest = new URLRequest("bigSound.mp3"); //从外获取音乐文件。
+snd.load(req);<br><br>var channel:SoundChannel;
+channel = snd.play(0,99); //从0ms开始播放，重复99次
+snd.addEventListener(Event.SOUND_COMPLETE, onPlaybackComplete); //设定检测，当播放完毕时候调用onPlaybackComplete<br><br>var bytes:ByteArray = new ByteArray();
+var display:Sprite = new Sprite(); //显示频谱用的精灵（个人认为在老版本里对应的是影片剪辑）<br><br>this.addChild(display); //让前面的display精灵显示在Flash舞台上
+this.addEventListener(Event.ENTER_FRAME, onEnterFrame);<br><br>function onEnterFrame(event:Event):void {
+SoundMixer.computeSpectrum(bytes, false, 0); //false处如果修改为true则为FFT模式<br><br>var g:Graphics = display.graphics;
+var n:Number = 0;<br><br>g.clear();<br><br>//左声道
+g.lineStyle(0, 0x00FF00);
+g.moveTo(0, WAVE_Y1);
+for (var i:int = 0; i<CHANNEL_LENGTH; i++) {
+g.lineTo(i*2, WAVE_Y1 - n);
+}<br><br>//右声道
+g.lineStyle(0, 0x00FF00);
+g.moveTo(0, WAVE_Y2); //将画笔移动到右声道的点上
+for (i = 0; i<CHANNEL_LENGTH; i++) {
+g.lineTo(i*2, WAVE_Y2 - n);
+}
+}<br><br>function onPlaybackComplete(event:Event) {
+removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+//播放结束了，就不必继续进行频谱显示了
+}<br><br>//代码结束</pre></blockquote>
+</blockquote>

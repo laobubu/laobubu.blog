@@ -1,0 +1,111 @@
+---
+layout: post
+title: "php的正则表达式简易快速入门"
+date: 2010-8-6 16:33:42
+permalink: /299
+categories: ["代码笔记和片段","日志","更新"]
+tags: ["php","Twitter","中文锐推客","正则表达式","程序自动化"]
+published: false
+---
+<img src="//rtbot.laobubu.net/logo.png" alt="" width="156" height="153" align="right" />在twitter上有一些机器人时刻工作着，收集他人的锐推。之前我讲过<a href="85">如何使用php自制一个锐推机器人</a>，不过现在单纯的RT功能已经很无趣了。在某个愚人节，推油<a href="http://wzyboy.im">@wzyboy</a>发布了一条愚人推：
+<blockquote>RT @<a rel="nofollow" href="https://twitter.com/rtmeme">rtmeme</a> 大家好，我现在升级完毕了，由于语义网的飞速发展，我已具有人类的思维了，已经可以做real以内的运算了，请发送“@rtmeme calc{exp}”来获得计算结果。</blockquote>
+（另外我问一下，“real以内”是什么东西？实数？）<br><br>现在我把小学简易运算带入了@RTKcn，大家一起来看看其原理吧。<!--more-->
+<h3>先从一个正则表达式匹配开始</h3>
+<blockquote>刚开始的时候我使用的是全字符匹配1+1的，不过这样子太原始了，而且只支持计算1+1。不过突然想起了那让人头晕的正则表达式！赶快试试先。<br><br>正则表达式用途很广泛，例如快速移除大量注释，删除垃圾信息，智能替换（注意在js里面必须使用正则才可以搞定“替换全部”这一功能），还有就是<a href="http://www.cert.org.cn/articles/activities/common/2010051324982.shtml" target="_blank">G℉W智能过滤系统</a>……<br><br>对正则表达式的摸索过程我就不多说了，先确定一下目标：我们要程序自动识别“请问<span style="color: #339966;">数字</span><span style="color: #3366ff;">运算符</span><span style="color: #339966;">数字</span>等于几”，并且把运算符和那两个数字提取出来。</blockquote>
+<h3>php里的模子</h3>
+<blockquote>google了一下，发现可以使用一个牛X的php函数来搞定检测。这个函数就是<strong><a href="http://docs.php.net/manual/zh/function.preg-match.php">preg_match</a></strong>！<br><br>在n+1次失败下，我摸索出来了这个东西，可以使用滴：
+<blockquote>$a='请问1+2等于几';
+$p='<strong>[请问</strong><span style="color: #0000ff;"><strong>(</strong><span style="color: #008000;"><strong>[0-9]</strong></span><span style="color: #800000;"><strong>{1,3}</strong></span><strong>)</strong></span><strong>(</strong><span style="color: #a29c49;"><strong>+</strong></span><strong>|-</strong><span style="color: #ff9900;"><strong>|</strong></span><strong>*|/)</strong><span style="color: #0000ff;"><strong>([0-9]{1,3})</strong></span><strong>等于几]</strong>';<br><br>if (<span style="color: #993366;"><strong>preg_match</strong></span>($p,$a,$b)) {
+<div style="padding-left: 20px;">print('恭喜你，解析成功。现在$b是一个数组了');</div>
+}</blockquote>
+以上就是目前@RTKcn使用的检测代码。
+现在我就讲一下上面那些带有颜色的部分表示的意义：
+<ul>
+	<li><span style="color: #0000ff;"><strong>蓝色部分</strong></span>：每一个<strong>小括号</strong>里面的东西会成为所得<strong>数组中的一个元素</strong>。</li>
+	<li><span style="color: #008000;"><strong>深绿部分</strong></span>：<strong>中括号</strong>里说明东西的<strong>格式</strong>。下面会详细讲。</li>
+	<li><span style="color: #800000;"><strong>深红部分</strong></span>：表示匹配<strong>前面的中括号</strong>的东西的<strong>数量范围</strong>，这里表示允许1至3个数字。</li>
+	<li><span style="color: #a29c49;"><strong>屎黄部分</strong></span>：为了防止一些特殊的<strong>标点单独存在</strong>而被误解为<strong>表达式指示符</strong>，需要加一个<strong>斜杠</strong>（）。参考下面“中括号的故事”里的内容。</li>
+	<li><span style="color: #ff9900;"><strong>金黄部分</strong></span>：如果在一个小括号里面<strong>允许多种内容存在</strong>，就<strong>用斜杠</strong>把允许存在的各种东西<strong>分开</strong>。（例如这里允许+-*/这四个符号）</li>
+</ul>
+<img src="http://i671.photobucket.com/albums/vv73/laobubu/pics%20for%20blog/BlogImage1.jpg" alt="" /><br><br><strong>补充说明：前面<span style="color: #008000;">[0-9]</span>可以替换为<span style="color: #008000;">d</span>！详情见下面“斜杠的故事”！</strong><br><br>在上面程序输出“恭喜你”什么的话同时， $b已经被改为一个数组了。此数组内容就像下面：
+<blockquote>$b[0]= "请问1+1等于几"
+$b[1]= "1"
+$b[2]= "+"
+$b[3]= "2"</blockquote>
+该数组第一个元素就是匹配正则表达式的文字片段（由于这里全部文字都匹配，所以就没啥变化。大家试试看在被检测文字开头或末尾加料），其他的……按顺序匹配小括号里的内容。<br><br>好了，现在开始正规点儿！</blockquote>
+<!--nextpage-->
+<h3>小括号外传（可读可不读）</h3>
+<blockquote>如果你认为小括号现有功能已经足够了，那么请pass下面文字。
+<h4>为小括号起名字</h4>
+<blockquote>小括号一般就是用来捕获文字（前面我们就用它捕获了数字和运算符）。但是如果你很注重代码灵活性，不喜欢使用固定的数字来获取数组中某个元素，那么可试试把上面正则表达式修改成这样子：
+<blockquote>[请问(<span style="color: #ff0000;"><strong><span style="color: #3366ff;">?&lt;num1&gt;</span></strong></span>[0-9]{1,3})(+|-|*|/)([0-9]{1,3})等于几]</blockquote>
+<strong>(注意<span style="color: #800000;">那个问号</span>，必须！)</strong><br><br>然后在代码里面你就可以像这样获取第一个数字啦：
+<blockquote>$b[<strong><span style="color: #3366ff;">'num1'</span></strong>]="1"</blockquote>
+浪费几个字节的磁盘空间，但是代码会好维护和阅读得多。</blockquote>
+<h4>不允许小括号所得内容进入数组结果</h4>
+<blockquote>另外还有一种情况就是：<span style="text-decoration: underline;">利用小括号把一些鸡肋捞走</span>。<br><br>有些时候，我们要求用户输入的数据里有一些东西是不能缺少的，但它们却只是纯粹摆设而已，对程序的运行没用。就如开头的“请问”，占位子而已。我们的正则表达式应该是识别出来后不放入返回的数组。<br><br>如果不希望捞走的东西又成为数组的一部分，那么就修改一下表达式吧。例如下面的就会把第一个数字无视掉。
+<blockquote>[请问(<span style="color: #ff0000;"><strong><span style="color: #3366ff;">?:</span></strong></span>[0-9]{1,3})(+|-|*|/)([0-9]{1,3})等于几]</blockquote>
+<strong>(注意<span style="color: #800000;">那个问号和冒号</span>，必须！)</strong>
+结果就不一样了，原本数组里面有第一个数字，但是现在被无视了：
+<blockquote>$b[0]= "请问1+2等于几"
+$b[1]= "+"
+$b[2]= "2"</blockquote>
+</blockquote>
+</blockquote>
+<!--nextpage-->
+<h3>中括号的故事</h3>
+<blockquote>中括号，正则表达式里面最重要的东西之一。<br><br>在php里面，那个正则表达式全被中括号包围（如果你喜欢其他风格，可以使用“/”来包围）
+<h4>先从小横线开始</h4>
+<blockquote>之前的代码里面我们使用了<span style="color: #3366ff;">[0-9]</span>来<strong>表示数字</strong>的格式，它意味着0到9都接受。<br><br>我们试试看DIY：<strong>匹配小写字母</strong>。<br><br>这次我们把$a(被检测字符串)修改为： <span style="color: #008000;">"abcd-Hello"</span><br><br>我们把0和9分别改成a和z，整个正则表达式修改为： <span style="color: #008000;">"[([a-z]<strong>*</strong>)]"</span><br><br>（提示：小括号里面的星号可以相当于<strong> {1,∞}</strong> ，但是<strong>不可以把∞放入大括号</strong>，因此使用星号替代掉大括号表示不限量。<span style="text-decoration: underline;">同类的还有一些，见下面“大括号的故事”</span>）<br><br>记得前面第一页讲过的吧，函数给你的数组第一项是<strong>匹配正则表达式的文字片段</strong>，所以把上面绿色的部分分别代入第一页程序里，可以得到这种结果：
+<blockquote>$b[0]= "abcd"<br><br>$b[1]= "abcd"</blockquote>
+实际情况是：<strong>小横线表明匹配的字符的范围。上面a-z实际上是指匹配ASCII码在97-122之间的字符（a的ASCII码是97，z的是122）</strong><br><br>但是如果你遇到的是中文怎么办？等一下再说……<br><br>这里还有一个问题就是：后面的Hello该怎么提取？</blockquote>
+<h4>混合的条件</h4>
+<blockquote>我们可以试试用小括号先把前面的“abcd,”得到。<br><br>[<span style="color: #800000;">[([a-z]*)<span style="color: #000000;">,</span>]</span><em>【这里怎么办】</em>]<br><br>“【这里怎么办】”？这里是匹配Hello的地方。如果你真的很无聊，可以像这样子<br><br>[([<span style="color: #008000;">A-Z</span>]*)([<span style="color: #008000;">a-z</span>]*)]<br><br>问题是如果你遇到了“HeLLo”，就只能有He了，实际上我们可以……搞混合的条件<br><br>[([<span style="color: #008000;">A-Za-z</span>]*)]<br><br>你可以亲自试试看，<strong>它匹配由大写字母和小写字母组成的一串字符<span style="text-decoration: underline;">（大小写字母的位置没要求）</span></strong><br><br>是不是很方便？如果同时还要匹配整个字符串（实际上这里那个字符串就是由字符和横线组成的），可以这样修改<br><br>[([<span style="color: #008000;">A-Za-z</span><span style="color: #008000;"><strong><span style="color: #ff0000;">-</span></strong></span>]*)]<br><br>上面的例子匹配由大小写字母以及减号构成的字符串。</blockquote>
+<h4>用加上啥的…… 看起来有点牛</h4>
+<blockquote>用斜杠搞出来的东西真的不是给人看的，这货应该是使得有些要学习正则的人被雷翻的东西。<br><br>不过斜杠啥的虽然乱，它还是有点用途的。以下为部分斜杠用法
+<table>
+<tbody>
+<tr>
+<th></th>
+<th>说明</th>
+</tr>
+<tr>
+<td>x**</td>
+<td>代表ASCII码十六进制为**的字符</td>
+</tr>
+<tr>
+<td>u****</td>
+<td>代表Unicode码十六进制为****的字符</td>
+</tr>
+<tr>
+<td>***</td>
+<td>代表ASCII码八进制为***的字符（为什么偏偏是八进制？！）</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<blockquote>这样子，你知道中文怎么写了吧。如果你嫌麻烦，就直接把中文用进去而不用这斜杠什么的，不过后果自负。（p.s 如果你想这么玩的话，试试Unicode模式，很舒坦的。参考下面的“其他内容”）</blockquote>
+<h4>还有其他斜杠物吗？</h4>
+<blockquote>这当然有。在C、Java、php等语言里，有好些斜杠东西，比如最常见的n（换行符）。正则表达式里也不例外
+<table>
+<tbody>
+<tr>
+<th></th>
+<th>说明</th>
+</tr>
+<tr>
+<td>r和n</td>
+<td>这两个都是换行符，常用的就是n了。<br><br>在Windows环境下我们用rn，就像vb里的vbCrLf</td>
+</tr>
+<tr>
+<td>f</td>
+<td>换页符号</td>
+</tr>
+<tr>
+<td>b</td>
+<td>退格键</td>
+</tr>
+</tbody>
+</table>
+除此之外还有就是开头提到的防止被误解用的……<br><br>在正则表达式里有一大堆符号可能会出现在要捕获的文字里，比如<br><br>*  + | { } ……<br><br>如果在文字里需要，加上斜杠就OK（例如* 就是指星号了），否则后果自负<br><br>要更多的斜杠物，可以参考一下<a href="http://msdn.microsoft.com/zh-cn/library/az24scfc.aspx">http://msdn.microsoft.com/zh-cn/library/az24scfc.aspx</a></blockquote>
+</blockquote>

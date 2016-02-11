@@ -1,0 +1,40 @@
+---
+layout: post
+title: "sitemix.jp超快速的日本免费空间"
+date: 2010-5-3 9:33:18
+permalink: /24
+categories: ["免费资源"]
+tags: ["免费空间"]
+published: true
+---
+<img align="left" title="[SiteMix的Logo]" src="http://sitemix.jp/images/logo_sitemix.gif" alt="" width="274" height="71" />大家先试试访问一下<a href="http://sitemix.jp/">http://sitemix.jp</a>，有什么感觉？我的个人感觉就是——超快的。<br><br>日本虽然只是一个小岛国，但是其在许多方面都是世界领先的，包括网络方面。日本也是全球13个根服务器的成员国家之一，<a href="http://m.root-servers.org/">其代号似乎为m</a>（顺便牢骚一句：中国如果想安设一个根服务器，等GFW没有再说吧）。在那大海下，有多少光缆接着那里和全世界。除了他们的光缆，还有就是日本和中国的距离特别近，我们可以快速访问日本网站。<br><br>在速度方面，我就特别推荐sitemix的免费空间。除了速度，它还自动安装WordPress作为blog，超酷的。只是网页上有广告，不过下面有写如何屏蔽之。<!--more-->
+<h2>sitemix特性</h2>
+以下为sitemix主页上面说的内容
+<blockquote>1.5GB的空间<br><br>流量无限制<br><br>可以使用PHP和CGI<br><br>可以绑定自己的顶级域名（免费二级域名就免了——laobubu注）<br><br>FTP、Web方式上传管理文件<br><br>自带最新版WordPress<br><br>有广告（可以屏蔽——laobubu注）<br><br>速度超快，稳定性很好<br><br>……</blockquote>
+我倒是还没有拿定是否在上面搞网站的主意，不过有一点我准备好了：拿它做你管索引（<a href="http://code.google.com/p/youtubeindex/">http://code.google.com/p/youtubeindex/</a>）。<br><br>.
+<h2>怎么注册？</h2>
+注册还是比较快的
+<h3>第一步，邮箱</h3>
+打开<a href="http://sitemix.jp/">http://sitemix.jp/</a>，点击<img align="none" title="注册" src="http://sitemix.jp/images/head_navi03.gif" alt="" width="108" height="20" /> (网页顶部)<br><br>在打开的页面输入你的电子邮箱地址（要输入两次），敲回车，然后去打开邮件里的链接<br><br>.
+<h3>第二步，信息</h3>
+信息这里有许多东西需要搞定，如果你看不懂日文，方法是：看视频教程 <a href="http://www.dbank.com/download.action?k=c79b6299c9ce4acd984748c3febaf025">http://www.dbank.com/download.action?k=c79b6299c9ce4acd984748c3febaf025</a> （备份下载<a href="http://dl.dropbox.com/u/1614650/SiteMix.rar">http://dl.dropbox.com/u/1614650/SiteMix.rar</a>，被墙）<br><br>.
+<h3>第三步，设置网站信息</h3>
+信息这一步OK以后，就会出现“<strong>サイト情報登録</strong>”，其中“希望アカウントの種類”意思是域名类型。<br><br>第一个是“使用免费二级域名”。他们提供的还是不少，我选择的是hp2.jp的后缀。<br><br>第二个是“使用自己的顶级域名”。只支持顶级域名，发现里面也支持tk的……<br><br>下半部分随你填，网站信息而已。<br><br>完毕以后猛击[<img align="none" title="確認" src="https://sitemix.jp/images/btn_con.gif" alt="" width="149" height="41" />]。<br><br>.
+<h3>第四步，文件管理</h3>
+日文的控制面板我真的不清楚，Google Translate翻译后也一样。在第二封邮件里有控制面板的地址（<a href="https://sitemix.jp/control/" target="_blank">https://sitemix.jp/control/</a>）。第一个框框输入你的邮箱，第二个自然就是密码了。<br><br>在控制面板左侧找到“登録内容/FTP接続情報”，点开，里面就有内容了。ＦＴＰホスト名后面就是FTP服务器。FTP用户名和密码同登陆时候输入的。<br><br>如果你不想要使用FTP，可以试试在线文件管理。登陆以后点击左侧的“<a href="https://sitemix.jp/control/control_top.php#">ブログ編集</a>”或者进入<a href="https://sitemix.jp/control/file_manager/index.php">https://sitemix.jp/control/file_manager/index.php</a>即可。在线管理器提供zip压缩和解压缩，同时也提供中文界面。<br><br>.
+<h2>如何消灭广告？</h2>
+广告无论你是使用html，还是php，他们都会嵌入广告。解决方法特别简单，在页面源代码的&lt;/head&gt;上面加入以下内容即可。
+<blockquote>&lt;style type="text/css"&gt;
+&lt;!--
+#sitemix_pr_footer,#sitemix_pr_footer_js,#sitemix_pr_header {
+<p style="padding-left: 30px;">display:none;
+height:1px;
+width:1px;
+position: absoult;
+left:0px;
+top:0px;
+visible:hidden;</p>
+}
+--&gt;
+&lt;/style&gt;</blockquote>
+这是一段超恶心的屏蔽代码……不过效果很好。

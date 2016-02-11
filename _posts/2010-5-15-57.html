@@ -1,0 +1,200 @@
+---
+layout: post
+title: "体验CSS3的魅力[部分]"
+date: 2010-5-15 10:17:34
+permalink: /57
+categories: ["代码笔记和片段"]
+tags: ["css","html"]
+published: true
+---
+<p>CSS3是和HTML5一同闪亮登场的玩意儿。它提供了许多有意思的东西，欢迎大家一起来折磨。</p>
+<p><i>（当前Internet Explorer还不支持，所以请各位换个浏览器来看，最好是<a href="http://www.google.com/chrome/?hl=zh-CN">Chrome</a>或<a href="http://www.apple.com.cn/safari/download/">Safari</a>）</i></p>
+<!--more-->
+<h3>圆角和阴影，方框们的新装</h3>
+<blockquote>
+  <p>在CSS3里面，提供了一些新东西。例如阴影、圆角……</p>
+  <div style="padding: 10px; background-color:#bef;-webkit-box-shadow: 0px 1px 5px #000; box-shadow: 0px 1px 5px #000;">
+    <p>这个DIV标签出现了神奇的阴影，同时也为过去的CSS留下了心理阴影。可惜某些浏览器还不支持CSS3，欣赏不到这个特效。</p>
+    <p>怎么做到的呢？很简单，只要这个CSS代码即可</p>
+    <div style="margin-left: 2em;color:#555;">
+      <p>padding: 5px; <br />
+        background-color:#bef;</p>
+      <p><font color="#990000">-webkit-box-shadow</font>: 0px 1px 5px #000;<br />
+        <font color="#990000">box-shadow</font>: 0px 1px 5px #000;</p>
+      </div>
+	 如果没有-webkit-的话，WebKit不认账！
+    </div>
+	<br /><br />
+	<div style="padding: 10px; background-color:#fee; border: 1px solid #000; -moz-border-radius: 20px; -webkit-border-radius: 20px;">
+    <p>这个DIV标签的边缘很柔和，这让某些浏览器感到不安。</p>
+    <p>以前还需要4个图片搞定，现在只要几句CSS代码</p>
+    <div style="margin-left: 2em;color:#555;"> <p>
+padding: 10px;<br />
+background-color:#fee;<br />
+border: 1px solid #000;</p>
+      <p><font color="#990000">-moz-border-radius</font>: 20px;<br />
+        <font color="#990000">-webkit-border-radius</font>: 20px;</p>
+      </div>
+	  似乎目前就Firefox内核和webkit内核支持。
+    </div>
+</blockquote>
+<h3>文字也有影子，而且还很“养眼”</h3>
+<blockquote>
+  <p>阴影不是方框的特权，文字也可以，只要稍微修改CSS代码……</p>
+  <div style="padding: 10px; background-color:#EFB;text-shadow: 0px 1px 5px #000;">
+    <p>看看这个DIV里面的字，你就知道怎么了。</p>
+    <div style="margin-left: 2em;color:#555;">
+      <p>padding: 5px; <br />
+        background-color:#EFB;</p>
+        <font color="#990000">text-shadow</font>: 0px 1px 5px #000;</p>
+      </div>
+	 这个不要-webkit-！</div>
+</blockquote>
+<h3>有规律，很舒适</h3>
+<blockquote>
+  <p>最受不了的是列表项只有一个点。</p>
+  <div style="padding: 10px; background-color:#feB;">
+  	<style>
+.row {
+  line-height:20px;
+  font-size:14px;
+  padding:5px;
+}
+.row:nth-child(even) {
+  background: #ccc;
+}
+.row:nth-child(odd) {
+  background: white;
+}
+	</style>
+    <p>下面的列表项好看多了</p>
+	<ul>
+      <li class="row">
+	  LPlayer是一个用于手机的多媒体播放器，采用Java语言编写，可以运行于大多数的手机上。<br />
+      LPlayer可以把手机的潜能发挥出来，例如诺基亚播放音乐时候可以改变速度，带有高端多媒体支持的手机藏有3D声场功能等。也许是因为手机厂商担心这些未完美的功能而坏了自己的名声而不直接提供，不过在LPlayer里你可以尝试一下。
+      </li>
+      <li class="row">
+	  快速推特是使用Java编写的手机Twitter客户端，主要特点就是节省流量。<br />
+	快速推特可称快速推(Fast Twitter)，主要为中国无法直接在手机上更新Twitter的人设计。快速推特每次通讯的流量一般不会超过10KB（已算入数据头），根据国内手机上网价格，每次通讯最高也就是一角。这十分利于未包流量的用户。
+	</li>
+      <li class="row">你管索引类似互联网上的Tube-Wαll（电视墙），为中国网民提供YouTube上面的视频。<br />
+你管索引是一个开源项目，你可以在Google Code上面下载到源代码并且自己搭建。视频结果都要被进行过滤，这样可以防止你的站点因为出现不好的东西而被停止。在观看和下载视频的时候提供两种模式（普清和高清），使你看视频更爽！</li>
+      <li class="row">你可以通过创建随机图片得到一个每次刷新都会变化的图片。<br />
+在某些地方（例如贴吧），使用随机图片是一件很拉风的事情！而这种拉风的事情，在这里轻轻松松1分钟搞定！</li>
+      <li class="row">上面内容来自http://laobubu.tk</li>
+    </ul>
+    <div style="margin-left: 2em;color:#555;">
+      <p>
+	    .row:<font color="#990000">nth-child(even)</font> {<br />
+        background: #dde;<br />
+        }<br />
+        .row:<font color="#990000">nth-child(odd)</font> {<br />
+        background: white;<br />
+        }</p>
+      </div>
+	 杯具的是li全部都要套上一个class="row"</div>
+	 	<br /><br /><br><br>  <div style=" line-height:20px; font-size:12px;padding: 10px; background-color:#bfb;-webkit-column-count: 3; -webkit-column-rule: 1px solid #000; -webkit-column-gap: 2em;">
+    <p>世界博览会（World Exhibition or Exposition，简称World Expo）又称国际博览会及世界博览会，简称世博会、世博，是一项由主办国政府组织或政府委托有关部门举办的有较大影响和悠久历史的国际性博览活动。参展者向世界各国展示当代的文化、科技和产业上正面影响各种生活范畴的成果。</p>
+    <p>世博会举办时间不定，有时甚至时长数十年举办一次。</p>
+    <p>世博会是一项由主办国政府组织或政府委托有关部门举办的有较大影响和悠久历史的国际性博览活动。它已经历了百余年的历史，最初以美术品和传统工艺品的展示为主，后来逐渐变为荟萃科学技术与产业技术的展览会，成为培育产业人才和一般市民的启蒙教育不可多得的场所。世界展览会的会场不单是展示技术和商品，而且伴以异彩纷呈的表演，富有魅力的壮观景色，设置成日常生活中无法体验的、充满节日气氛的空间，成为一般市民娱乐和消费的理想场所。</p>
+    <p>世界博览会是人类的聚会，人们从世界各地汇聚一处，展示各自的产品与技艺，赞美各自的故乡和祖国。世博会集人类文明之大成，因而具备了无与伦比的感染力，使人心情激荡。这样的聚会可以上溯至古时，早在公元五世纪，波斯举办了第一个超越集市功能的展览会。十八世纪末，人们逐渐想到举办与集市相似但只展不卖的展览会。而现代意义的世博会则发源于19世纪中叶工业革命萌芽之际。至今，世博会已经先后举办过40多届。</p>
+    <p>上面内容有点长，Sorry。</p>
+    <div style="margin-left: 2em;color:#555;">
+      <p> <font color="#990000">-webkit-column-count</font>: 3; <br />
+        <font color="#990000">-webkit-column-rule</font>: 1px solid #000;<br />
+        <font color="#990000">-webkit-column-gap</font>: 2em;<br />
+      </div>
+	  分段，不错
+    </div>
+</blockquote>
+<h3>透明效果</h3>
+<blockquote>
+  <p>之前都是使用fliter来制作，问题是似乎许多浏览器不支持它！</p>
+  <div style="padding: 10px; background-color:#fba;-webkit-box-shadow: 0px 1px 5px #000; box-shadow: 0px 1px 5px #000;">
+    <div style="background:url(http://mw2.google.com/mw-panoramio/photos/small/27805420.jpg);width:240px;height:180px;opacity:0.5;">
+      <p>这个DIV方框完美半透明,感谢opacity这个好东西！</p>
+      <p>照片是laobubu拍摄的红塔山</p>
+    </div>
+    <div style="color:rgba(225,225,225,0.6);background:url(http://www.gov.cn/2008/top_1.gif);width:138px;height:180px;">
+      <p>两年前的图标用于政府网站。</p>
+      <p>重要的是：文字是透明的</p>
+  <div style="background-color:rgba(225,225,225,0.5);color:#000;">这个也不错<br />微透明的背景<br />以前我还用PNG来搞，真复杂</div>
+    </div>
+    <p>CSS3里的透明效果，不外乎这两种。</p>
+    <div style="margin-left: 2em;color:#555;">
+      <p> <font color="#990000">opacity</font>: 0.5;</p>
+      <p> color: <font color="#990000">rgba</font>(225,225,225,0.6);</p>
+      </div>
+rgba实时混色，好极了
+    </div>
+</blockquote>
+<h3>重头戏·动态美</h3>
+<blockquote>
+  <p>说真的，我不会写JS来做动画！</p>
+<style>
+.a1 {
+  width:150px;
+  background-color:#000;
+  -webkit-transition: width 0.2s ease-in-out;
+  color:#fff;
+  padding:10px;
+  text-align:right;
+}
+.a1:hover {
+  width:500px;
+  -webkit-transition: width 0.5s linear;
+}
+.a2 {
+  width:300px;
+  -webkit-transition: text-shadow 0.2s ease-in-out;
+  text-shadow: 0px 0px 1px #fff;
+  color:#fff;
+  background-color:#45E;
+  padding:10px;
+  text-align:center;
+}
+.a2:hover {
+  text-shadow: 0px 2px 5px #000;
+  -webkit-transition: text-shadow 0.5s linear;
+}
+.a3 {
+  width:250px;
+  color:#fff;
+  padding:10px;
+  text-align:center;
+  background-color:#1C0;
+  -webkit-transition: background-color 0.2s ease-in-out;
+}
+.a3:hover {
+  background-color:#000;
+  -webkit-transition: background-color 0.5s linear;
+}
+.a4 {
+  width:180px;
+  color:#fff;
+  padding:10px;
+  background-color:#C01;
+  height:25px;
+  overflow: hidden;
+  opacity:1;
+  -webkit-transition: opacity 0.2s ease-in-out;
+}
+.a4:hover {
+  opacity:0.05;
+  -webkit-transition: opacity 0.2s linear;
+}
+</style>
+  <div style="padding: 10px; background-color:#bef;-webkit-box-shadow: 0px 1px 5px #000; box-shadow: 0px 1px 5px #000;">
+    <div class="a1">鼠标挪到这，体验效果1</div>
+	<div class="a2">还有效果2，可能有些不明显</div>
+	<div class="a3">效果3比较明显</div>
+	<div class="a4">效果4有点无聊</div>
+    <p>CSS代码的过渡效果，放置到过渡后的CSS样式上面。</p>
+    <div style="margin-left: 2em;color:#555;">
+	（第一个效果的重要代码如下）
+      <p> <font color="#990000">-webkit-transition</font>: width 0.5s linear;</p>
+      </div>
+	 如果没有-webkit-的话，WebKit不认账！<br />
+我会专门发一篇关于过渡效果的博文。
+    </div>
+</blockquote>

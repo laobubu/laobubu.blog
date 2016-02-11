@@ -1,0 +1,42 @@
+---
+layout: post
+title: "两个代码实例:Flash文件上传、上传文件到GStorage"
+date: 2011-1-23 15:24:37
+permalink: /468
+categories: ["程序实验室","程序资源"]
+tags: ["Flash制作的","Google","php制作的","云","免费空间","网盘"]
+published: true
+---
+应网友asd20344（可惜他没有留下网站地址，不然这里加一个链接）的留言，特辟一文，共享<a href="http://laobubu.net/fhost">laobubu.net/fhost</a>的文件转储GStorage部分源代码以及Flash选择文件上传功能的部分源代码。<br><br>（GStorage = Google Storage，详见<a href="http://blog.laobubu.net/442">http://blog.laobubu.net/442</a>）<br><br><!--more-->
+<h3>php中将用户上传的文件转储到GStorage</h3>
+先插入一行include('那个GS操作类');，然后
+<pre lang="php">$fp = realpath($_FILES['Filedata']['tmp_name']);
+$fp2 = $fp.$_FILES['Filedata']['name'];
+rename($fp,$fp2);
+$b = new Tws_Service_Google_Storage('GStorage令牌','GStorage令牌密匙');
+$b->putFile($fp2,'datastorage.laobubu.net/'.$上传上去后的文件名,array('acl'=&gt;Tws_Service_Google_Storage::ACL_PUBLIC_READ));</pre>
+就这么简单。至于为什么还要多余一个rename步骤嘛……懒得改那个GStorage读写的php类文件了，因为它会根据后缀自动选择文件上传上去后的MIME……<br><br>.<br><br>.<br><br>.
+<h3>Flash中“上传文件”窗口的打造</h3>
+这个要用Flash ActionScript 3了，版本不够的自觉绕开。<br><br>在弹出上传窗口的那个帧里面用这些代码
+<pre lang="java">var fr:FileReference= new FileReference();
+var frf:FileFilter= new FileFilter('支持的格式','*.JPG;*.GIF;*.PNG;*.MP3;*.WMA;*.MID;*.TXT;*.ZIP;*.RAR');
+var req:URLRequest= new URLRequest('处理上传的文件的php页路径');<br><br>function b2(e:Event) {
+	if (fr.size&gt;1024*1024*15) {
+		//这里处理文件大小超过15M的提示信息
+	} else {
+		fr.upload(req);
+	}
+}
+function progressHandler(event:ProgressEvent):void {
+	msg='已经完成' + p.currentFrame + "%n" + Math.floor(event.bytesLoaded/1024) + '/' + Math.floor(event.bytesTotal/1024) + ' KB';
+	//自己处理msg的显示
+}
+function completeHandler(event:DataEvent):void {
+	rtn = event.data; //然后rtn就是'处理上传的文件的php页返回的信息了
+	//其他自己干
+}<br><br>fr.addEventListener('select',b2);
+fr.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+fr.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, completeHandler);
+fr.browse([frf]);
+stop();</pre>
+免责声明：以上代码是从原程序里面精简提取出来的，不保证100%完美运行（尤其是那个Flash的，我对AS3超不熟悉）

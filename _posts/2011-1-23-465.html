@@ -1,0 +1,97 @@
+---
+layout: post
+title: "Google AuthSub快速php入门"
+date: 2011-1-23 14:51:12
+permalink: /465
+categories: ["代码笔记和片段","更新"]
+tags: ["Google","oAuth","php","youtube","你管索引"]
+published: true
+---
+今天更新了你管索引的程序，之前那个烂尾——评论功能解决了。发现Google很多服务的API都支持AuthSub完成类似oAuth的若干操作，这里做一个笔记，以后说不准还会用到。<br><br>AuthSub与oAuth相比，简单多了。你只要让用户访问Google的验证页面，完成验证后用户会折回来，同时地址里出现一个?token=临时令牌……以后需要更多操作只需要一步就可以将临时令牌转为永久令牌。在使用临时/永久令牌时候只需要在HTTP请求头添加一行就OK。超简单吧。<br><br>以后可能懒得写代码了，直接copy吧。<br><br><!--more-->
+<h3>获取临时令牌</h3>
+我刚刚说过了，你只需要设置一个超链接到google指定的页面即可。但是这个超链接指向哪里呢？<br><br>&lt;a href="<span style="text-decoration: underline;">https://www.google.com/accounts/AuthSubRequest?h=zh-CN&amp;next=<span style="color: #0000ff;">验证通过后回到的页面</span>&amp;scope=<span style="color: #0000ff;">服务类型</span>&amp;session=1&amp;secure=0</span>"&gt;用Google登陆&lt;/a&gt;<br><br>其中服务类型需要自选一下。以下为常用的条目：
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<th scope="col">释义</th>
+<th scope="col">开发文档</th>
+<th scope="col">服务类型</th>
+</tr>
+<tr>
+<td><a href="https://www.youtube.com">YouTube</a></td>
+<td><a href="http://code.google.com/apis/youtube/2.0/developers_guide_protocol_audience.html">2.0</a></td>
+<td>http%3A%2F%2Fgdata.youtube.com</td>
+</tr>
+<tr>
+<td><a href="https://www.blogger.com/">Blogger</a></td>
+<td><a href="http://code.google.com/intl/zh-CN/apis/blogger/docs/2.0/developers_guide_protocol.html">2.0 </a></td>
+<td>http%3A%2F%2Fwww.blogger.com%2Ffeeds%2F</td>
+</tr>
+<tr>
+<td><a href="https://docs.google.com">Google文档</a></td>
+<td><a href="http://code.google.com/apis/documents/docs/3.0/developers_guide_protocol.html">3.0</a></td>
+<td>https%3A%2F%2Fdocs.google.com%2Ffeeds%2Fdefault%2F</td>
+</tr>
+<tr>
+<td><a href="https://picasaweb.google.com/">Picasa Web相册</a></td>
+<td><a href="http://code.google.com/apis/picasaweb/docs/2.0/developers_guide_protocol.html">2.0</a></td>
+<td>https%3A%2F%2Fpicasaweb.google.com%2Fdata%2F</td>
+</tr>
+<tr>
+<td><a href="https://www.google.com/calendar/">Google日历</a></td>
+<td><a href="http://code.google.com/intl/en/apis/calendar/data/2.0/developers_guide_protocol.html">2.0</a></td>
+<td>http%3A%2F%2Fwww.google.com%2Fcalendar%2Ffeeds%2F</td>
+</tr>
+<tr>
+<td><a href="https://www.gmail.com">GMail</a></td>
+<td><a href="http://code.google.com/googleapps/domain/email_migration/reference.html">GApp</a></td>
+<td>https%3A%2F%2Fmail.google.com%2Fmail%2Ffeed%2Fatom%2F</td>
+</tr>
+</tbody>
+</table>
+完成验证后用户会跳入<span style="color: #0000ff;">验证通过后回到的页面?token=XXXXXXXXX</span><br><br>（例子：http://ng.laobubu.net/lib/login.php?token=<span style="text-decoration: underline;">1/X0E5K2C6QJGirl8GX86_yzB660rN4p0GmHlibyUssDA</span>）
+<h3>转化为永久令牌</h3>
+说“永久”实际上应该不算是吧。曾经google还有令牌过期一说，现在似乎没了。<br><br>根据google所言，只需向<a href="http://www.laobubu.net">https://www.google.com/accounts/AuthSubSessionToken</a>来一次GET（实际上就是一般的访问啦）即可，同时在请求头里面要带上临时令牌。请求头应该像这样的：
+<pre>Content-Type: application/x-www-form-urlencoded
+Authorization: AuthSub token="临时令牌"
+Host: www.google.com
+User-Agent: LAuthSub_Untrusted/laobubu/2.0
+Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+Connection: keep-alive</pre>
+在返回页里面，你可以用这样子的php代码
+<pre lang="php">$ch = curl_init('https://www.google.com/accounts/AuthSubSessionToken');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_HTTPHEADER,array(
+'Content-Type: application/x-www-form-urlencoded',
+'Authorization: AuthSub token="'.$_GET['token'].'"',
+'User-Agent: LAuthSub_Untrusted/laobubu/2.0',
+'Host: www.google.com',
+'Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2',
+'Connection: keep-alive'
+)
+);
+$result = curl_exec($ch);
+curl_close($ch);
+$result = substr($result,strpos($result,'=')+1,strpos($result,"n")-strpos($result,'=')-1);</pre>
+然后变量$result就是永久令牌了 8-)
+<h3>给一个使用的实例吧</h3>
+以下为你管索引发布评论的源代码……好吧，我连我的服务器上的都开源了 :-|
+<pre lang="php">$send = '<!--?xml version="1.0" encoding="UTF-8"?--><br><br>'.$_POST['comment'].'
+';
+$ch = curl_init('http://gdata.youtube.com/feeds/api/videos/'.$_GET['v'].'/comments');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $send);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch,CURLOPT_HTTPHEADER,array(
+	'Host: gdata.youtube.com',
+	'Content-Type: application/atom+xml',
+	'Content-length: '.strlen($send),
+	'Authorization: AuthSub token="'.$_SESSION['令牌'].'"',
+	'GData-Version: 2',
+	'X-GData-Key: key=YouTubeIndex_a_proxy_for_Chinese_by_laobubu'
+	)
+);
+$result = curl_exec($ch);
+curl_close($ch);</pre>
