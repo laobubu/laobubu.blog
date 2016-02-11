@@ -1,23 +1,23 @@
 # Site settings
-title: Another Blog
-url: "http://laobubu.github.io"    # the protocol and hostname of your site, eg. `http://laobubu.github.io`
-baseurl: "/jekyll-theme-EasyBook" # the prefix of your site uri, eg. `/jekyll-theme-EasyBook` or just one slash `/`
-#timezone: Asia/Chongqing
+title: laobubu的博客
+url: "http://blog.laobubu.net"    # the protocol and hostname of your site, eg. `http://laobubu.github.io`
+baseurl: "" # the prefix of your site uri, eg. `/jekyll-theme-EasyBook` or just one slash `/`
+timezone: Asia/Chongqing
 description: >
-  One or more sentences introducing this blog.
+  大概就是一个乱七八糟的地方而已。
 
 # Your information
-email: your_email@example.com
-author: your_name
-avatar: "//www.gravatar.com/avatar/your_email_md5?d=mm&s=135"
-profile: One sentence introducing yourself.
-#twitter_username: twitter_username
-#github_username:  github_username
+email: laobubu@gmail.com
+author: laobubu
+avatar: "//cdn.v2ex.com/gravatar/ebcd5f8f5e1cdbbd8b81058d52c252be?s=135"
+profile: 一个爱瞎鼓捣的家伙
+twitter_username: laobubu
+github_username:  laobubu
 
 # Comment Service (Disqus or 多说)
 #  choose one and un-comment the line to active it
 #disqus_shortname: xxx   # get one: https://disqus.com/admin/signup/
-#duoshuo_shortname: xxx  # get one: http://duoshuo.com/create-site/
+duoshuo_shortname: laobubu  # get one: http://duoshuo.com/create-site/
 
 permalink: /archivers/:title
 gems:
