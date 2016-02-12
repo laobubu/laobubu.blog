@@ -22,9 +22,9 @@ excerpt_separator: <!--more-->
 
 该程序运行于浏览器，无任何依赖，只需要一个 js 文件即可。
 
-在线演示 & 文档： <http://laobubu.github.io/MarkdownIME>
-源代码： <https://github.com/laobubu/MarkdownIME>
-问题反馈： [submit issue](https://github.com/laobubu/MarkdownIME/issues/new)
+ - **在线演示 & 文档**： <http://laobubu.github.io/MarkdownIME>
+ - **源代码**： <https://github.com/laobubu/MarkdownIME>
+ - **问题反馈**： [submit issue](https://github.com/laobubu/MarkdownIME/issues/new)
 
 ## 使用说明
 
@@ -34,6 +34,8 @@ excerpt_separator: <!--more-->
 
 ## 碎碎念
 
+### idea 与造轮子？
+
 这个 idea 是在使用 OneNote 记录东西时突然想到的，因为微软那鬼畜的界面要点来点去实在太烦人了。
 
 与 Typora 的关系只是功能相似而已。
@@ -41,6 +43,8 @@ excerpt_separator: <!--more-->
 此作品的[雏形](https://github.com/laobubu/MarkdownIME/tree/draft)最早发布于 V2EX，地址为 <http://www.v2ex.com/t/241963>，那个时候 Typora 还没有出 Windows 版本，因此我没有什么机会去感受，不知道你们这些使用 Mac 的城里人是怎么玩儿的。反正就是，没有任何山寨的意思！
 
 有意思的是后来 Typora 还是推出了 Windows 版本，我测试了一下，效果还不错，但是有点儿 bug，而且感觉启动速度很慢（没有 SSD 的我能为各位水深火热中的学生党带盐）。
+
+### 反正没人看
 
 本来还想使用 Electron 之类的玩意儿，把这个 MarkdownIME 做成电脑软件的，但是懒得动了……
 
