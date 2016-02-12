@@ -129,6 +129,16 @@ function RealLoad(){
             $(this).addClass('middle-image');
         }
     })
+    
+    var translate = {
+        "Buy me a Coffee":"帮我买杯咖啡",
+        "About":"关于",
+        "Category":"分类"
+    };
+    $('.site-nav a.page-link').each(function() {
+        var t=$(this),s=t.text();
+        t.text(translate[s]||s);
+    })
 }
 
 RealLoad()
