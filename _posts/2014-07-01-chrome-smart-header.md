@@ -100,6 +100,29 @@ S          | 毫秒
 
 当然，如果你能为我赏点饭钱，想必是极好的，只是坑爹的支付宝还是不给我实名认证……所以暂时只有 PayPal 通道了。点击这个可爱的图标进入：
 
+## Dev v1.0.0.6
+
+就做了三件小事，很惭愧。
+
+### Bug 修复
+
+第一件事是收到 @skotak29 的邮件，反馈说在配置页面中不能使用带有数字的请求头，于是做了修改。
+
+在寻找 HTTP header field name 规则的时候，发现两个：
+
+ - `/^[a-zA-Z_][\w\-]*$/` 如果遵循 <https://tools.ietf.org/html/bcp90#section-4.1> 中关于请求头的名字标准的话。
+ - `/^[\x21-\x39\x3B-\x7E]+$/` 如果遵循 <https://tools.ietf.org/html/rfc2822#section-3.6.8> 中关于 `field-name` 的定义。
+
+最后选择的是前者。
+
+感觉这个 bug 应该是赶走了一群人呢。
+
+### 提升性能
+
+修改的时候顺带给自己挖了大坑。第二是重新实现了有关魔法变量的程序，效率能翻好几倍。只能说之前的技术太渣了，一个正则表达式能搞定的，居然重复了七八个
+
+第三是修改了拦截函数，把之前冗余代码给合并了，看起来更爽一点。（虽然只是我自己舒服）
+
 [![Buy me a coffee](http://lab.laobubu.net/smartheader/donate.png)](http://laobubu.net/donate.html)
 
 [^1]: **“Change HTTP Request Header” is not in laobubu lab anymore** http://blog.laobubu.net/646
