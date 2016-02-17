@@ -100,7 +100,11 @@ S          | 毫秒
 
 当然，如果你能为我赏点饭钱，想必是极好的，只是坑爹的支付宝还是不给我实名认证……所以暂时只有 PayPal 通道了。点击这个可爱的图标进入：
 
+[![Buy me a coffee](http://lab.laobubu.net/smartheader/donate.png)](http://laobubu.net/donate.html)
+
 ## Dev v1.0.0.6
+
+2016-02-16
 
 就做了三件小事，很惭愧。
 
@@ -122,7 +126,5 @@ S          | 毫秒
 修改的时候顺带给自己挖了大坑。第二是重新实现了有关魔法变量的程序，效率能翻好几倍。只能说之前的技术太渣了，一个正则表达式能搞定的，居然重复了七八个
 
 第三是修改了拦截函数，把之前冗余代码给合并了，看起来更爽一点。（虽然只是我自己舒服）
-
-[![Buy me a coffee](http://lab.laobubu.net/smartheader/donate.png)](http://laobubu.net/donate.html)
 
 [^1]: **“Change HTTP Request Header” is not in laobubu lab anymore** http://blog.laobubu.net/646
