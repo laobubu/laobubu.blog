@@ -5,7 +5,7 @@ permalink: /donate/
 public: true
 ---
 
-![Sponsors](http://laobubu.net/image/sponsors.png)
+![Sponsors](//laobubu.net/image/sponsors.png)
 
 很高兴我的作品能给你带来帮助，也感谢你点击了那个捐赠的链接。
 
