@@ -5,6 +5,8 @@ permalink: /donate/
 public: true
 ---
 
+![Sponsors](//laobubu.net/image/sponsors.png)
+
 很高兴我的作品能给你带来帮助，也感谢你点击了那个捐赠的链接。
 
 正如您所见，我的作品基本都是免费提供的。如果您觉得我的作品很有帮助，不妨帮我买杯“咖啡”，小额地支持一下我。
