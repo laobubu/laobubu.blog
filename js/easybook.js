@@ -24,14 +24,35 @@ function TOCize(toc, content, matchHeightTo) {
         },
         target: 0,
         running: 0,
+        getTop: function() {
+            return window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+        },
+        setTop: function(value) {
+            (window['scrollTo'] && window.scrollTo(window.scrollX, value))
+        },
         tick: function() {
-            var oldST = document.body.scrollTop, newST = ~~((oldST + aniscroll.target) / 2);
-            document.body.scrollTop = newST;
-            if (document.body.scrollTop < newST || Math.abs(newST - aniscroll.target) < 10) {
-                document.body.scrollTop = aniscroll.target;
+            var oldST = aniscroll.getTop(), newST = ~~((oldST + aniscroll.target) / 2);
+            aniscroll.setTop(newST);
+            if (aniscroll.getTop() < newST || Math.abs(newST - aniscroll.target) < 10) {
+                aniscroll.setTop(aniscroll.target);
                 clearInterval(aniscroll.running)
                 aniscroll.running = 0
             }
+        }
+    }
+    
+    function scrollToHeader(header, hash, ev) {
+        var y = header.getBoundingClientRect().top + aniscroll.getTop();
+        if (window.history['pushState']) {
+            window.history.pushState({}, header.textContent, "#" + hash);
+            aniscroll.to(y);
+            ev.preventDefault();
+        } else {
+            var y2 = aniscroll.getTop();
+            setTimeout(function() {
+                aniscroll.setTop(y2);
+                aniscroll.to(y);
+            }, 0);
         }
     }
     
@@ -45,12 +66,7 @@ function TOCize(toc, content, matchHeightTo) {
         }
         q.textContent = h.textContent;
         q.setAttribute('href', '#' + hash );
-        q.addEventListener('click', 
-            function(e){ 
-                aniscroll.to(h.getBoundingClientRect().top + document.body.scrollTop);
-                e.preventDefault();
-            }
-            ,false);
+        q.addEventListener('click', scrollToHeader.bind(this, h, hash), false);
         return q;
     };
     
@@ -93,7 +109,7 @@ function TOCize(toc, content, matchHeightTo) {
     var maxHeightTOC = '';
     var ppc = document.querySelector('.col-main');
     var s1 = function(){
-        var scrollTop=document.body.scrollTop, dummyClientTop=scrolldummy.getBoundingClientRect().top,
+        var scrollTop=aniscroll.getTop(), dummyClientTop=scrolldummy.getBoundingClientRect().top,
             margin = 10,c,d; // c = dummyHeight, d = TOC.maxHeight (+'px')
         if ((c = -dummyClientTop + margin) < 0) c = 0;
         if (c) {
