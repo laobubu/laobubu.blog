@@ -39,8 +39,9 @@ public: true
 |Zhang Haoyuan|2014-09-02| |
 |Jun|2016-02-05| A sweet Coffee! :) |
 |[Mygod](http://mygod.tk/)|2016-02-12| 口令红包一样的价格…… |
-|Fei|2016-02-14| A Starbuck >w< |
+|Fei|2016-02-14| A Starbucks >w< |
 |Tianshu|2016-02-21| [Smart Header] |
 |Johnny Sun|2016-03-15| 666 Coffee |
+|666(Wu)|2016-03-25| [Smart Header] 神器 |
 
 [Smart Header]: /archives/chrome-smart-header/
