@@ -29,9 +29,9 @@ public: true
 <a href="https://qr.alipay.com/apvqu49h7662kez218">
 <img alt="Alipay QR" src="//laobubu.net/image/alipay.png">
 </a>
-<a href="https://wx.tenpay.com/f2f?t=AQAAACUZ2QmSVLvdZs7mWH3Dfq8%3D">
+
 <img alt="WeChat QR" src="//laobubu.net/image/wechat.png">
-</a>
+
 </p>
 
 ## Heroes
