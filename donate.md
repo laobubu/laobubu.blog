@@ -23,17 +23,12 @@ public: true
 <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 </form>
 
-使用支付宝的用户，请使用手机扫描或点击二维码：
+使用支付宝或者微信的用户，请使用手机扫描或点击二维码：
 
 <p style="text-align:center">
 <a href="https://qr.alipay.com/apvqu49h7662kez218">
 <img alt="Alipay QR" src="//laobubu.net/image/alipay.png">
 </a>
-</p>
-
-使用微信支付的用户，请使用手机扫描或点击二维码：
-
-<p style="text-align:center">
 <a href="https://wx.tenpay.com/f2f?t=AQAAACUZ2QmSVLvdZs7mWH3Dfq8%3D">
 <img alt="WeChat QR" src="//laobubu.net/image/wechat.png">
 </a>
