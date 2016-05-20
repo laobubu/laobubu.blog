@@ -31,6 +31,14 @@ public: true
 </a>
 </p>
 
+使用微信支付的用户，请使用手机扫描或点击二维码：
+
+<p style="text-align:center">
+<a href="https://wx.tenpay.com/f2f?t=AQAAACUZ2QmSVLvdZs7mWH3Dfq8%3D">
+<img alt="WeChat QR" src="//laobubu.net/image/wechat.png">
+</a>
+</p>
+
 ## Heroes
 
 | Name | Date | Comment |
