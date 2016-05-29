@@ -47,5 +47,6 @@ public: true
 |Johnny Sun|2016-03-15| 666 Coffee |
 |666(Wu)|2016-03-25| [Smart Header] 神器 |
 |Yonghu|2016-05-17| 插件很好用 |
+|Fu Dyno|2016-05-28| WeChat |
 
 [Smart Header]: /archives/chrome-smart-header/
