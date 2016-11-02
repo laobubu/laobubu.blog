@@ -28,7 +28,7 @@ excerpt_separator: <!--more-->
 
 ### 拖拽上传文件 (feature-drag-n-drop)
 
-**未完全实现！** 此功能未正式发布，你可以[点击这里下载尝鲜版](https://ci.appveyor.com/project/laobubu/putty/build/1.0.12/artifacts)。
+**未完全实现！** 此功能未正式发布，你可以[点击这里下载尝鲜版](https://ci.appveyor.com/project/laobubu/putty/build/1.0.13/artifacts)。
 
 截至 2016-11-1，仅实现了以下功能：
 
