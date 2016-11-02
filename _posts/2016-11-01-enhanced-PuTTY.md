@@ -28,14 +28,14 @@ excerpt_separator: <!--more-->
 
 ### 拖拽上传文件 (feature-drag-n-drop)
 
-**未完全实现！** 此功能未正式发布，你可以下载[尝鲜版](https://ci.appveyor.com/project/laobubu/putty/build/1.0.9/artifacts)。
+**未完全实现！** 此功能未正式发布，你可以[点击这里下载尝鲜版](https://ci.appveyor.com/project/laobubu/putty/build/1.0.12/artifacts)。
 
 截至 2016-11-1，仅实现了以下功能：
 
 - 可拖拽上传文件。
 - 提供两种模式上传文件：
   - 使用 ZModem 上传文件（需自备 `win32-lrzsz` 的 `sz.exe` ）
-  - 使用 Shell + xxd 上传文件（默认选项。技术细节见下文，速度很慢，但是几乎支持全部 Unix 目标）
+  - 使用 Shell + base64 上传文件（默认选项。技术细节见下文，速度很慢，但是几乎支持全部 Unix 目标）
   - 在选项窗口中可选择
 
 以下功能即将到来：
@@ -106,3 +106,7 @@ stty echo
 因为不知道咋的，会爆，无论是本地的发送缓冲区，还是对面的 Shell。
 
 PuTTY 是单线程的，要实现这个功能还额外加了一个线程，于是各种多线程的坑就出现了，还额外实现了一个 subthd 模块。
+
+### 使用 Base64 上传
+
+使用 Base64 的话，冗余更低，速度更快。只是需要不停地摇晃鼠标，促使 mainloop 发送文件，晚些时候修正。 -- 2016年11月2日
