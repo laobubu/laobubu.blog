@@ -48,5 +48,7 @@ public: true
 |666(Wu)|2016-03-25| [Smart Header] 神器 |
 |Yonghu|2016-05-17| 插件很好用 |
 |Fu Dyno|2016-05-28| WeChat |
+|(unknown)|2017-02-04| WeChat |
+|Phithon|2017-02-07|  |
 
 [Smart Header]: /archives/chrome-smart-header/
